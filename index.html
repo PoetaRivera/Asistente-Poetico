@@ -8,9 +8,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="Description" content="Esta página proporciona una aplicion de silabeo ortográfico y poético">
   <title>Asistente Poético</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+
   <link rel="stylesheet" href="asistentepoetico.css" />
+  <link rel="stylesheet" href="index.css" />
   <script src="jquery-3.6.0.js"></script>
   <script src="asistentepoetico.js"></script>
+  <script src="funciones.js"></script>
 
 </head>
 
@@ -25,7 +29,7 @@
 </script>
 
 <body>
-
+<div class="principal">
   <header id="cabecera">
 
     <section id="texto">
@@ -34,10 +38,12 @@
       </div>
 
       <div id="indicaciones">
-        <p>Las palabras aparecen separadas por espacios en blanco (" ")</p>
-        <p> Las sílabas aparecen separadas por diagonal ("/")</p>
-        <p> Las sinalefas se representan por la vergulilla ("~")
-        </p>
+        <ul class="lista">
+          <li>Las palabras aparecen separadas por espacios en blanco</li>
+          <li> Las sílabas aparecen separadas por diagonal ("/")</li>
+          <li> Las sinalefas se representan por la vergulilla ("~")</li>
+        </ul>
+
       </div>
     </section>
 
@@ -58,8 +64,8 @@
 
     <div id="ortografico">
       <div id="tituloort">
-        <div id="titulo1">Silabeo ortográfico</div>
-        <div id="titulo11"># Sílabas</div>
+        <p id="titulo1">Silabeo ortográfico</p>
+        <p id="titulo11"># Sílabas</p>
       </div>
 
       <div id="versoout">
@@ -85,7 +91,7 @@
     </div>
   </div>
   <footer id="pie">pie</footer>
-
+</div>
 </body>
 
 </html>

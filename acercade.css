@@ -1,9 +1,4 @@
-body {
-  display: flex;
-  flex-direction: column;
-  background-color: #000;
-  color: white;
-}
+
 #cabeceraAcerca {
   display: flex;
   flex-direction: column;
@@ -16,32 +11,19 @@ body {
 #fotoAcerca {
   padding-left: 20px;
 }
+
 img {
   padding-left: 0px;
- 
+
 }
+
 #cuerpoAcerca {
   height: 80%;
   padding-left: 10px;
   padding-right: 10px;
 }
 
-#a1Acerca {
-  box-shadow: 3px 3px 3px #000;
-  padding: 10px 10px;
-  border: 1px solid #6200ea;
-  border-radius: 5px;
-  background-color: #b388ff;
-  color: white;
-  text-decoration: none;
-  text-align: center;
-  font-size: 10px;
-  width: 12%;
-  height: 10%;
-  margin-left: 20px;
-  margin-bottom: 5px;
-  
-}
+
 
 p {
   text-align: justify;
