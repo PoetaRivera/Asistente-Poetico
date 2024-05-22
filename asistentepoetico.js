@@ -134,16 +134,18 @@ function ampliarVentanas() {
     outtext3.style.height = tamanoInicialVentana;
 
     outtext4.style.height = tamanoInicialVentana;
-  } ampliar = !ampliar;
+  }
+  ampliar = !ampliar;
 }
 
 //Hacer alto de pantalla igual a la pantalla del dispositivo.
 function obtenerTamanoPantalla() {
+  const body = document.getElementById("body");
   let ancho = screen.width;
   let alto = screen.height;
   alto = 1 * alto;
   ancho = 1 * ancho;
-  $("body").css("height", alto + "px");
+  body.css("height", alto + "px");
 }
 
 // Este es el programa principal
@@ -163,6 +165,10 @@ function principal() {
   let a4 = "";
 
   const intext1 = document.getElementById("intext1");
+  const outtext1 = document.getElementById("outtext1");
+  const outtext2 = document.getElementById("outtext2");
+  const outtext3 = document.getElementById("outtext3");
+  const outtext4 = document.getElementById("outtext4");
   const boton3 = document.getElementById("boton3");
 
   if (intext1.value.trim() === "") {
@@ -200,16 +206,17 @@ function principal() {
     a2 = a2.concat(arrSilOrto[i]);
     a3 = a3.concat(arrVerPoe[i]);
     a4 = a4.concat(arrSilPoe[i]);
-    $("#outtext1").val(a1); //imprime salida ortografic
-    $("#outtext2").val(a2); //impripe salida poetica
-    $("#outtext3").val(a3); //imprime salida ortografic
-    $("#outtext4").val(a4); //impripe salida poetica
+    outtext1.value=a1; //imprime salida ortografic
+    outtext2.value=a2; //impripe salida poetica
+    outtext3.value=a3; //imprime salida ortografic
+    outtext4.value=a4; //impripe salida poetica
   }
 }
 
 // lee versos de entrada y guarda cada verso en cada elmento del arreglo lineas
 function leerFila() {
-  let s = $("#intext1").val();
+  const intext1 = document.getElementById("intext1");
+  let s = intext1.value;
   let verso = s;
   let lineas = verso.split("\n"); //separa
   lineas = lineas.filter((element) => element != ""); //elimina elementos vacios ""
@@ -359,7 +366,7 @@ function segundo(filas) {
   let largo;
   let verso = "";
 
-  /* let s = $("#intext1").val();
+  /* let s = ("#intext1").val();
      //obtiene el verso y elimina blancos al inició o/y al final.
      verso = s;
      verso = s.trim();*/
@@ -482,7 +489,7 @@ function contarSilabasPoetico(v) {
 
 function obtenerSilabas(palabras) {
   // extrae silabas casos dos y tres palabras. Para luego determinar sinalefa
-  // let versoEntrada = $("#intext1").val();
+  // let versoEntrada = ("#intext1").val();
   let versoEntrada = palabras;
   let versoSalida = [];
   versoSalida = leerVerso(versoEntrada);
