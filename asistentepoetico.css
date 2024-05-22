@@ -1,13 +1,15 @@
 /* Definición variables de color*/
+:root {
+  --tamanoVentanaMin: 15vh;
+  --A100: #CCFF90;
+}
 
 
-/* Version laptop y desktop */
 
 #intext1::-webkit-scrollbar {
   width: 0 px;
   /* width of the entire scrollbar */
 }
-
 
 #outtext1::-webkit-scrollbar {
   width: 0px;
@@ -15,50 +17,25 @@
 }
 
 
-
 #outtext2::-webkit-scrollbar {
   width: 0px;
   /* width of the entire scrollbar */
 }
 
-#outtext2::-webkit-scrollbar-track {
-  background: orange;
-  /* color of the tracking area */
-}
-
-#outtext2::-webkit-scrollbar-thumb {
-  background-color: blue;
-  /* color of the scroll thumb */
-  border-radius: 20px;
-  /* roundness of the scroll thumb */
-  border: 3px solid orange;
-  /* creates padding around scroll thumb */
-}
 
 #outtext3::-webkit-scrollbar {
   width: 0px;
   /* width of the entire scrollbar */
 }
 
-
 #outtext4::-webkit-scrollbar {
   width: 0px;
   /* width of the entire scrollbar */
 }
 
-#outtext4::-webkit-scrollbar-track {
-  background: orange;
-  /* color of the tracking area */
-}
 
-#outtext4::-webkit-scrollbar-thumb {
-  background-color: blue;
-  /* color of the scroll thumb */
-  border-radius: 20px;
-  /* roundness of the scroll thumb */
-  border: 3px solid orange;
-  /* creates padding around scroll thumb */
-}
+
+
 
 /*---------------------------------------------------------------------------------------------*/
 @media screen and (min-width: 100px) {
@@ -82,7 +59,6 @@
     justify-content: flex-start;
     align-items: center;
     color: white;
-
     max-width: 400px;
     gap: 20px;
   }
@@ -107,10 +83,7 @@
     gap: 30px;
   }
 
-  #pie {
-    display: flex;
 
-  }
 
   /*------------------------------------------------------------------------------------------------*/
   /*Cabecera*/
@@ -183,7 +156,7 @@
     }
 
     #a1:hover {
-      color: #747bff;
+      color: #76FF03;
     }
   }
 
@@ -194,14 +167,12 @@
     flex-direction: row;
     justify-content: flex-start;
     gap: 10px;
-
     width: 100%;
   }
 
   #ortografico {
     display: flex;
     flex-direction: column;
-
     width: 100%;
   }
 
@@ -219,9 +190,9 @@
     resize: none;
     padding-left: 8px;
     padding-top: 10px;
-    height: 30vh;
+    height: var(--tamanoVentanaMin);
     background-color: black;
-    
+
   }
 
   /*----------------------------------------------------------------------------------------------*/
@@ -272,9 +243,10 @@
     padding-left: 8px;
     padding-top: 5px;
     line-height: 1.5;
-    height: 30vh;
+    height: var(--tamanoVentanaMin);
     background-color: black;
-    
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+
   }
 
   #outtext2,
@@ -289,9 +261,9 @@
     padding-right: 5px;
     padding-top: 5PX;
     line-height: 1.5;
-    height: 30vh;
+    height: var(--tamanoVentanaMin);
     background-color: black;
-   
+    font-family: Arial, Helvetica, sans-serif;
   }
 
   /*------------------------------------------------------------------------------------------------*/

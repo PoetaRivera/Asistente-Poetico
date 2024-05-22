@@ -18,80 +18,73 @@
 
 </head>
 
-<!-- Código google estadisticas -->
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-LT1QK1KEJ0"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag() { dataLayer.push(arguments); }
-  gtag('js', new Date());
-  gtag('config', 'G-LT1QK1KEJ0');
-</script>
+
 
 <body>
-<div class="principal">
-  <header id="cabecera">
+  <div class="principal">
+    <header id="cabecera">
 
-    <section id="texto">
-      <div id="titulo">
-        <h1>Silabeo poético/ortográfico</h1>
+      <section id="texto">
+        <div id="titulo">
+          <h1>Silabeo poético/ortográfico</h1>
+        </div>
+
+        <div id="indicaciones">
+          <ul class="lista">
+            <li>Las palabras aparecen separadas por espacios en blanco</li>
+            <li> Las sílabas aparecen separadas por diagonal ("/")</li>
+            <li> Las sinalefas se representan por la vergulilla ("~")</li>
+          </ul>
+
+        </div>
+      </section>
+
+      <section id=botones>
+        <a id="a1" href="acercade.html" class="boton">Acerca de...</a>
+        <input type="button" value="Iniciar" id="boton1" class="boton" />
+        <input type="button" value="Limpiar" id="boton2" class="boton" />
+        <input type="button" value="Ajustar" id="boton3" class="boton" />
+      </section>
+
+    </header>
+
+    <div id="cuerpo">
+
+      <div id="versoin">
+        <textarea type="text" cols="80" name="v1" id="intext1" class="text"
+          placeholder="Introduce tu poema aquí y luego haz click en iniciar"></textarea>
       </div>
 
-      <div id="indicaciones">
-        <ul class="lista">
-          <li>Las palabras aparecen separadas por espacios en blanco</li>
-          <li> Las sílabas aparecen separadas por diagonal ("/")</li>
-          <li> Las sinalefas se representan por la vergulilla ("~")</li>
-        </ul>
+      <div id="ortografico">
+        <div id="tituloort">
+          <p id="titulo1">Silabeo ortográfico</p>
+          <p id="titulo11"># Sílabas</p>
+        </div>
 
+        <div id="versoout">
+          <textarea type="text" id="outtext1" class="text" placeholder="Aquí aparece el silabeo ortográfico"
+            readonly></textarea>
+          <textarea type="text" id="outtext2" class="text" placeholder="#Silabas" readonly></textarea>
+          <div id="der1"></div>
+        </div>
       </div>
-    </section>
 
-    <section id=botones>
-      <a id="a1" href="acercade.html">Acerca de...</a>
-      <input type="button" value="Iniciar" id="boton1" class="boton" />
-      <input type="button" value="Limpiar" id="boton2" class="boton" />
-    </section>
+      <div id="poetico">
+        <div id="titulopoe">
+          <div id="titulo2">Silabeo poético</div>
+          <div id="titulo21"># Sílabas</div>
+        </div>
 
-  </header>
-
-  <div id="cuerpo">
-
-    <div id="versoin">
-      <textarea type="text" cols="80" name="v1" id="intext1" class="text"
-        placeholder="Introduce tu poema aquí y luego haz click en iniciar"></textarea>
+        <div id="versopoe">
+          <textarea type="text" id="outtext3" class="text" placeholder="Aquí aparece el silabeo poético"
+            readonly></textarea>
+          <textarea type="text" id="outtext4" class="text" placeholder="#Silabas" readonly></textarea>
+          <div id="der2"></div>
+        </div>
+      </div>
     </div>
-
-    <div id="ortografico">
-      <div id="tituloort">
-        <p id="titulo1">Silabeo ortográfico</p>
-        <p id="titulo11"># Sílabas</p>
-      </div>
-
-      <div id="versoout">
-        <textarea type="text" id="outtext1" class="text" placeholder="Aquí aparece el silabeo ortográfico"
-          readonly></textarea>
-        <textarea type="text" id="outtext2" class="text" placeholder="#Silabas" readonly></textarea>
-        <div id="der1"></div>
-      </div>
-    </div>
-
-    <div id="poetico">
-      <div id="titulopoe">
-        <div id="titulo2">Silabeo poético</div>
-        <div id="titulo21"># Sílabas</div>
-      </div>
-
-      <div id="versopoe">
-        <textarea type="text" id="outtext3" class="text" placeholder="Aquí aparece el silabeo poético"
-          readonly></textarea>
-        <textarea type="text" id="outtext4" class="text" placeholder="#Silabas" readonly></textarea>
-        <div id="der2"></div>
-      </div>
-    </div>
+    <footer id="pie">pie</footer>
   </div>
-  <footer id="pie">pie</footer>
-</div>
 </body>
 
 </html>

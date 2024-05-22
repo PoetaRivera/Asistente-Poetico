@@ -1,12 +1,10 @@
-
-
 document.addEventListener("DOMContentLoaded", function () {
- 
- // obtenerTamanoPantalla();
-  
+  // obtenerTamanoPantalla();
+
   // Obtén referencias a los elementos del DOM
   const boton1 = document.getElementById("boton1");
   const boton2 = document.getElementById("boton2");
+  const boton3 = document.getElementById("boton3");
   const intext1 = document.getElementById("intext1");
   const outtext1 = document.getElementById("outtext1");
   const outtext2 = document.getElementById("outtext2");
@@ -14,32 +12,20 @@ document.addEventListener("DOMContentLoaded", function () {
   const outtext4 = document.getElementById("outtext4");
 
   // Asigna los manejadores de eventos
-
- outtext1.addEventListener('input', function() {
-    // Ajustar la altura automáticamente
-    outtext1.style.height = 'auto';
-    outtext1.style.height = outtext1.scrollHeight + 'px';
-  });
-
-  
-
-
- outtext2.addEventListener('input', function() {
-    // Ajustar la altura automáticamente
-    this.style.height = 'auto';
-    this.style.height = this.scrollHeight + 'px';
-  });
-
-
-
-
-
-
+  //------------------------------------------------------------------------------------------------
+  //deshabilita el boton 'ampliar'
+  boton3.disabled = true;
   //ejecuta el programa principal
   boton1.addEventListener("click", principal);
   //limpia las cuatro textArea
   boton2.addEventListener("click", limpiar);
-
+  //amplia ventanas
+  boton3.addEventListener("click", ampliarVentanas);
+  //--------------------------------------------------------------------------------------------------
+  intext1.addEventListener("scroll", () => {
+    let y = intext1.scrollTop;
+    intext1.scrollTo(0, y);
+  });
   // cuando hace scroll outtext1 se sincroniza para que outtext2  se desplaze igual.
   outtext1.addEventListener("scroll", () => {
     let y = outtext1.scrollTop;
@@ -60,18 +46,34 @@ document.addEventListener("DOMContentLoaded", function () {
     let y = outtext4.scrollTop;
     outtext3.scrollTo(0, y);
   });
+  //----------------------------------------------------------------------------------------------
 });
 
+//definicion de constantes
 let tipoSina = 2; //determina el tipo de sinalefa
+let tamanoInicialVentana = "15vh";
+let ampliar = true;
 
 function limpiar() {
   // limpia todo
+  const boton3 = document.getElementById("boton3");
+  const intext1 = document.getElementById("intext1");
+  const outtext1 = document.getElementById("outtext1");
+  const outtext2 = document.getElementById("outtext2");
+  const outtext3 = document.getElementById("outtext3");
+  const outtext4 = document.getElementById("outtext4");
 
-  document.getElementById("intext1").value = "";
-  document.getElementById("outtext1").value = "";
-  document.getElementById("outtext2").value = "";
-  document.getElementById("outtext3").value = "";
-  document.getElementById("outtext4").value = "";
+  boton3.disabled = true;
+  intext1.value = "";
+  intext1.style.height = tamanoInicialVentana;
+  outtext1.value = "";
+  outtext1.style.height = tamanoInicialVentana;
+  outtext2.value = "";
+  outtext2.style.height = tamanoInicialVentana;
+  outtext3.value = "";
+  outtext3.style.height = tamanoInicialVentana;
+  outtext4.value = "";
+  outtext4.style.height = tamanoInicialVentana;
 }
 
 //Determina el elemento mas largo de un arreglo.
@@ -93,6 +95,46 @@ function largoMayor(arre) {
     mayor = arreglo[0].length;
   }
   return mayor;
+}
+
+function ampliarVentanas() {
+  const intext1 = document.getElementById("intext1");
+  const outtext1 = document.getElementById("outtext1");
+  const outtext2 = document.getElementById("outtext2");
+  const outtext3 = document.getElementById("outtext3");
+  const outtext4 = document.getElementById("outtext4");
+
+  if (ampliar) {
+    // Ajustar la altura automáticamente
+    intext1.style.height = "auto";
+    intext1.style.height = intext1.scrollHeight + "px";
+
+    // Ajustar la altura automáticamente
+    outtext1.style.height = "auto";
+    outtext1.style.height = outtext1.scrollHeight + "px";
+
+    // Ajustar la altura automáticamente
+    outtext2.style.height = "auto";
+    outtext2.style.height = outtext2.scrollHeight + "px";
+
+    // Ajustar la altura automáticamente
+    outtext3.style.height = "auto";
+    outtext3.style.height = outtext3.scrollHeight + "px";
+
+    // Ajustar la altura automáticamente
+    outtext4.style.height = "auto";
+    outtext4.style.height = outtext4.scrollHeight + "px";
+  } else {
+    intext1.style.height = tamanoInicialVentana;
+
+    outtext1.style.height = tamanoInicialVentana;
+
+    outtext2.style.height = tamanoInicialVentana;
+
+    outtext3.style.height = tamanoInicialVentana;
+
+    outtext4.style.height = tamanoInicialVentana;
+  } ampliar = !ampliar;
 }
 
 //Hacer alto de pantalla igual a la pantalla del dispositivo.
@@ -120,6 +162,14 @@ function principal() {
   let a3 = "";
   let a4 = "";
 
+  const intext1 = document.getElementById("intext1");
+  const boton3 = document.getElementById("boton3");
+
+  if (intext1.value.trim() === "") {
+    boton3.disabled = true;
+  } else {
+    boton3.disabled = false;
+  }
   let filas = leerFila(); //codigo nuevo
   for (let i = 0; i < filas.length; i++) {
     let j = i + 1;
