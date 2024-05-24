@@ -1,5 +1,7 @@
+
+
+
 document.addEventListener("DOMContentLoaded", function () {
-  // obtenerTamanoPantalla();
 
   // Obtén referencias a los elementos del DOM
   const boton1 = document.getElementById("boton1");
@@ -51,11 +53,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
 //definicion de constantes
 let tipoSina = 2; //determina el tipo de sinalefa
-let tamanoInicialVentana = "15vh";
+let tamanoInicialVentana = "25vh";
 let ampliar = true;
 
 function limpiar() {
-  // limpia todo
+  // limpia todos loa textarea
   const boton3 = document.getElementById("boton3");
   const intext1 = document.getElementById("intext1");
   const outtext1 = document.getElementById("outtext1");
@@ -141,10 +143,10 @@ function ampliarVentanas() {
 //Hacer alto de pantalla igual a la pantalla del dispositivo.
 function obtenerTamanoPantalla() {
   const body = document.getElementById("body");
-  let ancho = screen.width;
+//  let ancho = screen.width;
   let alto = screen.height;
   alto = 1 * alto;
-  ancho = 1 * ancho;
+//  ancho = 1 * ancho;
   body.css("height", alto + "px");
 }
 
@@ -154,11 +156,6 @@ function principal() {
   let arrVerOrto = [""];
   let arrSilPoe = [""];
   let arrVerPoe = [""];
-  let arrOrto = [""];
-  let arrPoe = [""];
-  let cadenaVacios = " ";
-
-  let numVacios = 0;
   let a1 = "";
   let a2 = "";
   let a3 = "";
@@ -223,9 +220,56 @@ function leerFila() {
   return lineas;
 }
 
+
 //Determina si una palabra es aguda, llana o esdrújula
 // Devuelve 1 si es aguda, 0 si es llana y -1 si es esdrujula.
-function determinaAcentoPalabra(pal) {
+function determinaAcentoPalabra(palabra) {
+  const arregloVocalesAcento = ["á", "é", "í", "ó", "ú"];
+  const silabas = palabra.split("/");
+  const numeroSilabas = silabas.length;
+  let indicadorAcento = 2;
+
+  // Función para determinar si una sílaba contiene una vocal acentuada
+  const contieneVocalAcentuada = (silaba) => {
+    return arregloVocalesAcento.some((vocal) => silaba.includes(vocal));
+  };
+
+  // Si la palabra tiene más de una sílaba
+  if (numeroSilabas > 1) {
+    for (let i = 0; i < numeroSilabas; i++) {
+      const silaba = silabas[i];
+      if (contieneVocalAcentuada(silaba)) {
+        const numeroDeSilaba = i;
+        if (numeroDeSilaba === numeroSilabas - 1) {
+          indicadorAcento = 1; // última sílaba
+        } else if (numeroDeSilaba === numeroSilabas - 2) {
+          indicadorAcento = 0; // penúltima sílaba
+        } else {
+          indicadorAcento = -1; // antepenúltima sílaba o anterior
+        }
+        break;
+      }
+    }
+
+    // Si no se encontró una vocal acentuada
+    if (indicadorAcento === 2) {
+      const ultimaSilaba = silabas[numeroSilabas - 1];
+      const ultimaLetra = ultimaSilaba.slice(-1);
+      if ("snaioue".includes(ultimaLetra)) {
+        indicadorAcento = 0; // palabra llana
+      } else {
+        indicadorAcento = 1; // palabra aguda
+      }
+    }
+  } else {
+    // Si la palabra es monosílaba
+    indicadorAcento = 1; // palabra aguda monosílaba
+  }
+
+  return indicadorAcento;
+}
+
+/*function determinaAcentoPalabra(pal) {
   let p = pal;
   let arregloEnSilabas = [""];
   let arregloVocalesAcento = ["á", "é", "í", "ó", "ú"];
@@ -287,9 +331,9 @@ function determinaAcentoPalabra(pal) {
     indicadorAcento = 1; //palabra aguda monosilabo
   }
   return indicadorAcento;
-}
+}*/
 
-function depurarVerso(fila) {
+/*function depurarVerso(fila) {
   let arregloCaracteresNormales = [
     "a",
     "e",
@@ -352,6 +396,63 @@ function depurarVerso(fila) {
   versoCopia = versoCopia.replaceAll(/\s+/g, " ");
 
   return versoCopia;
+}*/
+
+function depurarVerso(fila) {
+  const caracteresValidos = new Set([
+    "a",
+    "e",
+    "i",
+    "o",
+    "u",
+    "á",
+    "é",
+    "í",
+    "ó",
+    "ú",
+    "h",
+    "ä",
+    "ë",
+    "ï",
+    "ö",
+    "ü",
+    "b",
+    "c",
+    "d",
+    "f",
+    "g",
+    "j",
+    "k",
+    "l",
+    "m",
+    "n",
+    "ñ",
+    "p",
+    "q",
+    "r",
+    "s",
+    "t",
+    "v",
+    "w",
+    "x",
+    "y",
+    "z",
+    " ",
+  ]);
+
+  let verso = fila.trim().toLowerCase();
+  let versoDepurado = "";
+
+  for (const char of verso) {
+    if (caracteresValidos.has(char)) {
+      versoDepurado += char;
+    }
+  }
+
+  // Reemplaza múltiples espacios por un solo espacio
+  versoDepurado = versoDepurado.replace(/\s+/g, " ");
+
+  return versoDepurado;
 }
 
 function segundo(filas) {
@@ -450,7 +551,7 @@ function segundo(filas) {
   return versoSalida;
 }
 
-function contarSilabasOrtografico(arreglo, caracter) {
+/*function contarSilabasOrtografico(arreglo, caracter) {
   let miArreglo = arreglo;
   let miCaracter = caracter;
   let conta = 0;
@@ -471,9 +572,33 @@ function contarSilabasOrtografico(arreglo, caracter) {
     }
   }
   return conta2;
+}*/
+
+function contarSilabasOrtografico(arreglo, caracter) {
+  let totalSilabas = 0;
+
+  for (const palabra of arreglo) {
+    let contadorCaracter = 0;
+
+    for (const letra of palabra) {
+      if (letra === caracter) {
+        contadorCaracter++;
+      }
+    }
+
+    // Si no se encuentra el caracter en la palabra, cuenta como 1 sílaba
+    if (contadorCaracter === 0) {
+      totalSilabas++;
+    } else {
+      // Se suman las sílabas encontradas más una adicional
+      totalSilabas += contadorCaracter + 1;
+    }
+  }
+
+  return totalSilabas;
 }
 
-function contarSilabasPoetico(v) {
+/*function contarSilabasPoetico(v) {
   let verso = v;
   let conta = 0;
   for (let i = 0; i < verso.length; i++) {
@@ -485,7 +610,28 @@ function contarSilabasPoetico(v) {
   let total = -conta + determinaAcentoPalabra(verso[verso.length - 1]);
 
   return total;
+}*/
+
+function contarSilabasPoetico(verso) {
+  let conta = 0;
+
+  // Contar las tildes al final de cada palabra en el verso
+  for (const palabra of verso) {
+    if (palabra.endsWith("~")) {
+      conta++;
+    }
+  }
+
+  // Determinar el acento de la última palabra del verso
+  const acentoUltimaPalabra = determinaAcentoPalabra(verso[verso.length - 1]);
+
+  // Calcular el total de sílabas poéticas
+  const total = -conta + acentoUltimaPalabra;
+
+  return total;
 }
+
+
 
 function obtenerSilabas(palabras) {
   // extrae silabas casos dos y tres palabras. Para luego determinar sinalefa
@@ -539,6 +685,7 @@ function obtenerSilabas(palabras) {
     }
   }
 }
+
 function extraerSilabas(p) {
   let i = p.length - 1;
   let silaba = "";
@@ -549,6 +696,8 @@ function extraerSilabas(p) {
   }
   return silaba;
 }
+
+
 
 function sinalefaTresPalabras(silaba1, silaba2, silaba3) {
   let silabaDos = silaba2;

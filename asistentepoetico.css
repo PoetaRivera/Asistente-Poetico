@@ -1,7 +1,30 @@
 /* Definición variables de color*/
 :root {
-  --tamanoVentanaMin: 15vh;
+  --tamanoVentanaMin: 25vh;
   --A100: #CCFF90;
+  --A200: #B2FF59;
+  --A400: #76FF03;
+  --A700: #64DD17;
+  --A100R: rgb(204, 255, 144);
+  --A200R: #rgb(178, 255, 89, 0.5);
+  --A400R: #rgb(118, 255, 3);
+  --A700R: #rgb(100, 221, 23);
+
+  --backgroundClaro1:#CCFF90;
+  --backgroundClaro2: #B2FF59;
+  --backgroundClaro3: #76FF03;
+  --colorClaro1: black;
+  --colorClaro2: #333333;
+  --colorClaro3: #666666;
+
+  --backgroundOscuro1: black;
+  --backgroundOscuro2: #1e1e1e;
+  --backgroundOscuro3: #252526;
+  --colorOscuro1: white;
+  --colorOscuro2: #cccccc;
+  --colorOscuro3: #aaaaaa;
+  --borderColor1: var(--A100);
+  --borderColor2: var(--A700);
 }
 
 
@@ -39,8 +62,7 @@
 
 /*---------------------------------------------------------------------------------------------*/
 @media screen and (min-width: 100px) {
-
-  body {
+body {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -61,6 +83,7 @@
     color: white;
     max-width: 400px;
     gap: 20px;
+    margin-top: 30px;
   }
 
   /*------------------------------------------------------------------------------------------------*/
@@ -69,7 +92,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 20px;
+    gap: 30px;
     width: 100%;
 
   }
@@ -93,10 +116,11 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
+    gap: 10px;
   }
 
   #titulo {
-    font-size: 0.8rem;
+    font-size: 1.25rem;
     text-align: center;
     color: white;
     line-height: 0.5;
@@ -107,10 +131,10 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    font-size: 0.7rem;
+    font-size: 1rem;
     font-style: italic;
     line-height: 1.5;
-    width: 60%;
+    width: 100%;
 
 
   }
@@ -131,34 +155,28 @@
     border-radius: 8px;
     border: 1px solid transparent;
     padding: 0.6em 1.2em;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     font-weight: 500;
     font-family: inherit;
-    background-color: #1a1a1a;
+    background-color: var(--backgroundOscuro2);
     cursor: pointer;
     transition: border-color 0.25s;
+
 
   }
 
   .boton:hover {
-    border-color: #76FF03;
+    border-color:var(--A400);
   }
 
   .boton:focus,
   .boton:focus-visible {
-    outline: 4px auto -webkit-focus-ring-color;
+    outline: 4px auto;
   }
 
-  @media (prefers-color-scheme: light) {
-    :root {
-      color: #213547;
-      background-color: #ffffff;
-    }
 
-    #a1:hover {
-      color: #76FF03;
-    }
-  }
+
+
 
   /*----------------------------------------------------------------------------------------------*/
   /*Cuerpo*/
@@ -168,6 +186,7 @@
     justify-content: flex-start;
     gap: 10px;
     width: 100%;
+    margin-top: 10px;
   }
 
   #ortografico {
@@ -236,8 +255,8 @@
   #outtext3 {
     display: flex;
     flex-direction: column;
-    font-size: x-small;
-    letter-spacing: 0px;
+    font-size: 0.7rem;
+    letter-spacing: -0.5px;
     width: 88%;
     resize: none;
     padding-left: 8px;
@@ -253,7 +272,7 @@
   #outtext4 {
     display: flex;
     flex-direction: column;
-    font-size: x-small;
+    font-size: .7rem;
     letter-spacing: 0px;
     text-align: center;
     width: 12%;
@@ -267,12 +286,118 @@
   }
 
   /*------------------------------------------------------------------------------------------------*/
+  a {
+    border-radius: 8px;
+    border: 1px solid transparent;
+    padding: 0.6em 1.2em;
+    font-size: 0.8rem;
+    font-weight: 500;
+    font-family: inherit;
+    background-color: var(--backgroundOscuro2);
+    cursor: pointer;
+    transition: border-color 0.25s;
+  }
+
+  a:hover {
+    border-color: #76FF03;
+  }
+
+}
+/*---------------------------------------------------------------------------------------------*/
+@media screen and (min-width: 769px){
+
+  #principal{
+    max-width: 1200px;
+  }
+#cuerpo {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: center;
+    width: 90vw;
+    gap: 30px;
+   
+  }
+
+  #intext1, #outtex1, #outtex2, #outtex3, #outtex4{
+    ;
+  }
+
+}
 
 
+/* Estilos por defecto (puede ser modo claro o el que prefieras) */
+body {
+  background-color: aqua;
+  /* Fondo blanco */
+  color: blue;
+  /* Texto negro */
+}
+/*-----------------------------------------------------------------------------------------*/
+/* Estilos para modo claro */
+@media (prefers-color-scheme: light) {
 
+  body {
+    background-color: var(--backgroundClaro1);
+    /* Fondo blanco */
+    color: var(--colorClaro3);
+    /* Texto negro */
+  }
 
+  #texto{
+    background: var(--backgroundClaro1);
+  }
 
+  #titulo {
+    color: var(--colorClaro1);
+  }
 
+  .lista {
+    color: var(--colorClaro1);
+  }
 
+  #titulo1, #titulo2, #titulo11, #titulo21{
+    color: var(--backgroundOscuro3);
+  }
 
+  textarea{
+    color:var(--colorOscuro1);
+  }
+
+  textarea::placeholder {
+    opacity: 1;
+    color: var(--colorOscuro3);
+  }
+
+  a{
+    color:var(--A700);
+
+     }
+
+     .boton:hover{
+      border-width: 2px;
+      border-color:black;
+      background-color: var(--A700);
+      color:white;
+     }
+
+.boton{
+  color: var(--A700);
+
+}
+
+#pie{
+  background-color: var(--backgroundClaro1);
+}
+
+}
+
+/* Estilos para modo oscuro */
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: var(--backgroundOscuro3);
+    /* Fondo negro */
+    color: var(--colorOscuro3);
+    /* Texto blanco */
+  }
 }
