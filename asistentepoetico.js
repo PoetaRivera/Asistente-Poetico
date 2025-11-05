@@ -1,5 +1,4 @@
-
-
+import { limpiar } from './funciones.js';
 
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -20,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
   //ejecuta el programa principal
   boton1.addEventListener("click", principal);
   //limpia las cuatro textArea
-  boton2.addEventListener("click", limpiar);
+  boton2.addEventListener("click", () => limpiar(tamanoInicialVentana));
   //amplia ventanas
   boton3.addEventListener("click", ampliarVentanas);
   //--------------------------------------------------------------------------------------------------
@@ -55,49 +54,8 @@ document.addEventListener("DOMContentLoaded", function () {
 let tipoSina = 2; //determina el tipo de sinalefa
 let tamanoInicialVentana = "25vh";
 let ampliar = true;
-
-function limpiar() {
-  // limpia todos loa textarea
-  const boton3 = document.getElementById("boton3");
-  const intext1 = document.getElementById("intext1");
-  const outtext1 = document.getElementById("outtext1");
-  const outtext2 = document.getElementById("outtext2");
-  const outtext3 = document.getElementById("outtext3");
-  const outtext4 = document.getElementById("outtext4");
-
-  boton3.disabled = true;
-  intext1.value = "";
-  intext1.style.height = tamanoInicialVentana;
-  outtext1.value = "";
-  outtext1.style.height = tamanoInicialVentana;
-  outtext2.value = "";
-  outtext2.style.height = tamanoInicialVentana;
-  outtext3.value = "";
-  outtext3.style.height = tamanoInicialVentana;
-  outtext4.value = "";
-  outtext4.style.height = tamanoInicialVentana;
-}
-
-//Determina el elemento mas largo de un arreglo.
-//Recibe un arreglo y devuelve el número de elementos(carácteres) del verso más largo.
-//Determina el verso más largo del poema
-//No se utilizó
-function largoMayor(arre) {
-  let arreglo = arre;
-  let mayor = 0;
-  if (arreglo.length > 1) {
-    for (let i = 0; i < arreglo.length - 1; i++) {
-      if (arreglo[i].length >= arreglo[i + 1].length) {
-        mayor = arreglo[i].length;
-      } else {
-        mayor = arreglo[i + 1].length;
-      }
-    }
-  } else {
-    mayor = arreglo[0].length;
-  }
-  return mayor;
-}
+let sinalefaaExterior = false;
+let versoCopia = "";
 
 function ampliarVentanas() {
   const intext1 = document.getElementById("intext1");
@@ -269,135 +227,6 @@ function determinaAcentoPalabra(palabra) {
   return indicadorAcento;
 }
 
-/*function determinaAcentoPalabra(pal) {
-  let p = pal;
-  let arregloEnSilabas = [""];
-  let arregloVocalesAcento = ["á", "é", "í", "ó", "ú"];
-  let palabra = p;
-  let silaba;
-  let letra;
-  let tilde = false;
-  let numeroDeSilaba;
-  let indicadorAcento = 2;
-  let numeroSilabas;
-  let palabraEnSilabas = palabra.toString();
-  arregloEnSilabas = palabraEnSilabas.split("/");
-  numeroSilabas = arregloEnSilabas.length;
-
-  if (numeroSilabas != 1) {
-    for (let i = 0; i < numeroSilabas; i++) {
-      //determina si la palabra lleva tilde
-      silaba = arregloEnSilabas[i];
-      for (let j = 0; j < silaba.length; j++) {
-        letra = silaba[j];
-        for (let k = 0; k < arregloVocalesAcento.length; k++) {
-          if (letra == arregloVocalesAcento[k]) {
-            numeroDeSilaba = i;
-
-            if (numeroDeSilaba === numeroSilabas - 1) {
-              indicadorAcento = 1;
-            } else if (numeroDeSilaba == numeroSilabas - 2) {
-              indicadorAcento = 0;
-            } else if (numeroDeSilaba < numeroSilabas - 2) {
-              indicadorAcento = -1;
-            }
-            k = arregloVocalesAcento.length;
-            j = silaba.length;
-            i = numeroSilabas.length;
-          }
-        } //salida for arregloVocales
-      } //salida for letras
-    } //salida for numeroSilabas.
-    if (indicadorAcento == 2) {
-      //Si palabra no lleva tilde
-      let ultimaSilaba = arregloEnSilabas[numeroSilabas - 1];
-      let ultimaLetra = ultimaSilaba[ultimaSilaba.length - 1];
-      if (
-        ultimaLetra == "s" ||
-        ultimaLetra == "n" ||
-        ultimaLetra == "a" ||
-        ultimaLetra == "e" ||
-        ultimaLetra == "i" ||
-        ultimaLetra == "o" ||
-        ultimaLetra == "u"
-      ) {
-        indicadorAcento = 0; //palabra llana
-      } else {
-        indicadorAcento = 1; //palabra aguda
-      }
-    }
-  } else {
-    //monosilabo
-    indicadorAcento = 1; //palabra aguda monosilabo
-  }
-  return indicadorAcento;
-}*/
-
-/*function depurarVerso(fila) {
-  let arregloCaracteresNormales = [
-    "a",
-    "e",
-    "i",
-    "o",
-    "u",
-    "á",
-    "é",
-    "í",
-    "ó",
-    "ú",
-    "h",
-    "ä",
-    "ë",
-    "ï",
-    "ö",
-    "ü",
-    "b",
-    "c",
-    "d",
-    "f",
-    "g",
-    "j",
-    "k",
-    "l",
-    "m",
-    "n",
-    "ñ",
-    "p",
-    "q",
-    "r",
-    "s",
-    "t",
-    "v",
-    "w",
-    "x",
-    "y",
-    "z",
-    " ",
-  ];
-  let s = fila; //codigo en prueba
-
-  let caracterValido = false;
-  let verso = s;
-  verso = s.trim();
-  let versoCopia = verso.toLowerCase();
-
-  for (let i = 0; i < versoCopia.length; i++) {
-    caracterValido = false;
-    for (let j = 0; j < arregloCaracteresNormales.length; j++) {
-      if (versoCopia[i] == arregloCaracteresNormales[j]) {
-        caracterValido = true;
-      } //salida de caracter valido
-    } //salida j
-    if (!caracterValido) {
-      versoCopia = versoCopia.replaceAll(versoCopia[i], "");
-      i = i - 1;
-    }
-  } //salida de i
-  versoCopia = versoCopia.replaceAll(/\s+/g, " ");
-
-  return versoCopia;
-}*/
-
 function depurarVerso(fila) {
   const caracteresValidos = new Set([
     "a",
@@ -551,29 +380,6 @@ function segundo(filas) {
   return versoSalida;
 }
 
-/*function contarSilabasOrtografico(arreglo, caracter) {
-  let miArreglo = arreglo;
-  let miCaracter = caracter;
-  let conta = 0;
-  let conta2 = 0;
-  for (let i = 0; i < arreglo.length; i++) {
-    let largoPali = miArreglo[i].length;
-    conta = 0;
-    for (let j = 0; j < largoPali; j++) {
-      if (miArreglo[i][j] == miCaracter) {
-        conta++;
-      }
-    }
-    if (conta == 0) {
-      conta = 1;
-      conta2 = conta2 + conta;
-    } else {
-      conta2 = conta2 + conta + 1;
-    }
-  }
-  return conta2;
-}*/
-
 function contarSilabasOrtografico(arreglo, caracter) {
   let totalSilabas = 0;
 
@@ -597,20 +403,6 @@ function contarSilabasOrtografico(arreglo, caracter) {
 
   return totalSilabas;
 }
-
-/*function contarSilabasPoetico(v) {
-  let verso = v;
-  let conta = 0;
-  for (let i = 0; i < verso.length; i++) {
-    if (verso[i][verso[i].length - 1] == "~") {
-      conta++;
-    }
-  }
-  determinaAcentoPalabra(verso[verso.length - 1]);
-  let total = -conta + determinaAcentoPalabra(verso[verso.length - 1]);
-
-  return total;
-}*/
 
 function contarSilabasPoetico(verso) {
   let conta = 0;
@@ -2175,14 +1967,3 @@ function triSinalefa(s) {
   tripSinalefa = caso1 || caso2 || caso3 || caso4;
   return tripSinalefa;
 }
-
-/*function monosilabo(mono) {
- pal= leerVerso(mono); 
- let monoSilabo; 
-if(pal.length ==1){
-    monoSilabo=true;
-}else {
-    monoSilabo=false;
-}
-    return monoSilabo;
-}*/

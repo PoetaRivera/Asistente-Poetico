@@ -6,9 +6,9 @@
   --A400: #76FF03;
   --A700: #64DD17;
   --A100R: rgb(204, 255, 144);
-  --A200R: #rgb(178, 255, 89, 0.5);
-  --A400R: #rgb(118, 255, 3);
-  --A700R: #rgb(100, 221, 23);
+  --A200R: rgba(178, 255, 89, 0.5);
+  --A400R: rgb(118, 255, 3);
+  --A700R: rgb(100, 221, 23);
 
   --backgroundClaro1:#CCFF90;
   --backgroundClaro2: #B2FF59;
@@ -316,21 +316,13 @@ body {
     justify-content: center;
     width: 90vw;
     gap: 30px;
-   
+
   }
 
  #titulo1, #titulo2
  {font-size: 0.8rem;}
  }
 
-
-/* Estilos por defecto (puede ser modo claro o el que prefieras) */
-body {
-  background-color: aqua;
-  /* Fondo blanco */
-  color: blue;
-  /* Texto negro */
-}
 /*-----------------------------------------------------------------------------------------*/
 /* Estilos para modo claro */
 @media (prefers-color-scheme: light) {
