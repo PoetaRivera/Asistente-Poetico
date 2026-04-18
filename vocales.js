@@ -17,7 +17,7 @@ import { vCH, invertirPalabra } from "./utils.js";
  */
 export function extraeVocales(p, d) {
   let palabra = p;
-  let palabraCopia = p;
+  let palabraCopia = p.split("");  // array mutable para sustituir 'y' → 'i'
   let largoPalabra = p.length;
   let indPalabra = "";
   let secVocales = "";
@@ -29,7 +29,7 @@ export function extraeVocales(p, d) {
   for (let i = largoPalabra; i >= 0; i--) {
     if (palabra[i] == "y") {
       if (largoPalabra == 1) {
-        palabraCopia = "i";
+        palabraCopia = ["i"];
       } else {
         //caso palabra invertida
         if (direccion == "inv") {
