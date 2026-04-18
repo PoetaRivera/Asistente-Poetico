@@ -7,8 +7,8 @@
   --A700: #64DD17;
   --A100R: rgb(204, 255, 144);
   --A200R: rgba(178, 255, 89, 0.5);
-  --A400R: #rgb(118, 255, 3);
-  --A700R: #rgb(100, 221, 23);
+  --A400R: rgb(118, 255, 3);
+  --A700R: rgb(100, 221, 23);
 
   --backgroundClaro1:#CCFF90;
   --backgroundClaro2: #B2FF59;
@@ -326,7 +326,6 @@ body {
 
 /* Estilos por defecto (puede ser modo claro o el que prefieras) */
 body {
-  background-color: aqua;
   /* Fondo blanco */
   color: blue;
   /* Texto negro */

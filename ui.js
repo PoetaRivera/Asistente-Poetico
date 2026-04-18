@@ -86,50 +86,6 @@ export function ampliarVentanas() {
 }
 
 /**
- * Alterna entre dos modos de altura de los textarea: ajustada al contenido o mínima.
- * Entrada : ninguna — usa la variable global `ampliar` como interruptor
- * Salida  : ninguna (efecto de lado: modifica `style.height` de los textarea)
- *
- * Cuando ampliar=true: fuerza "height:auto" y luego ajusta al scrollHeight real,
- * permitiendo que el área crezca para mostrar todo el texto sin scroll interno.
- * Cuando ampliar=false: restaura la altura mínima definida en CSS (--tamanoVentanaMin).
- * Invierte el valor de `ampliar` al final para que el siguiente clic haga lo contrario.
- */
-export function obtenerTamanoPantalla() {
-  const body = document.getElementById("body");
-//  let ancho = screen.width;
-  let alto = screen.height;
-  alto = 1 * alto;
-//  ancho = 1 * ancho;
-  body.css("height", alto + "px");
-}
-
-/**
- * Limpia todos los textarea y deshabilita el botón de limpiar.
- * Entrada : ninguna (lee los elementos del DOM por id)
- * Salida  : ninguna (efecto de lado: vacía los campos y restaura altura mínima)
- *
- * Restablece la altura de cada textarea al valor inicial (--tamanoVentanaMin)
- * para deshacer el efecto de ampliarVentanas().
- */
-export function largoMayor(arre) {
-  let arreglo = arre;
-  let mayor = 0;
-  if (arreglo.length > 1) {
-    for (let i = 0; i < arreglo.length - 1; i++) {
-      if (arreglo[i].length >= arreglo[i + 1].length) {
-        mayor = arreglo[i].length;
-      } else {
-        mayor = arreglo[i + 1].length;
-      }
-    }
-  } else {
-    mayor = arreglo[0].length;
-  }
-  return mayor;
-}
-
-/**
  * Función principal: lee el poema del textarea, lo procesa verso a verso
  * y muestra los resultados en los cuatro paneles de salida.
  * Entrada : ninguna — lee `intext1.value` del DOM
