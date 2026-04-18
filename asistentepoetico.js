@@ -1,4 +1,5 @@
 import { depurarVerso, invertirPalabra, vCH, nuevoArreglo } from "./utils.js";
+import { extraeVocales, hiato, sinalefa, triSinalefa, tresVocales, cuatroVocales } from "./vocales.js";
 
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -908,73 +909,9 @@ function leerVerso(s) {
   return miArregloSil;
 }
 
-/**
- * Extrae la secuencia de vocales del borde de una sílaba (inicio o final).
- * Entrada : p = sílaba como string | d = "inv" si la sílaba está invertida
- * Salida  : string con las vocales consecutivas encontradas antes de la
- *           primera consonante, leyendo desde el final de la sílaba
- *
- * Se usa para determinar qué vocales quedan expuestas en el límite entre
- * dos palabras, y así evaluar si forman sinalefa o hiato.
- * Ejemplo (última sílaba de "cielo" = "lo" → no hay vocal expuesta más
- * que "o"; de "aire" última sílaba "re" → "e").
- *
- * El parámetro "inv" indica que la sílaba ya viene invertida (se usa para
- * analizar el inicio de la segunda palabra sin revertirla dos veces).
- * La "y" final se convierte a "i" cuando va precedida de vocal (ley → lei).
- */
-function extraeVocales(p, d) {
-  let palabra = p;
-  let palabraCopia = p;
-  let largoPalabra = p.length;
-  let indPalabra = "";
-  let secVocales = "";
-  let direccion = d;
-  let vocales = ["a", "e", "i", "o", "u", "á", "é", "í", "ó", "ú"];
+// → movido a vocales.js
+// → movido a vocales.js
 
-  // La "y" actúa como vocal cuando va después de vocal (ley, rey, hoy)
-  // En ese caso se sustituye por "i" para el análisis
-  for (let i = largoPalabra; i >= 0; i--) {
-    if (palabra[i] == "y") {
-      if (largoPalabra == 1) {
-        palabraCopia = "i";
-      } else {
-        //caso palabra invertida
-        if (direccion == "inv") {
-          for (let j = 0; j < vocales.length; j++) {
-            if (palabra[i + 1] == vocales[j]) {
-              palabraCopia[i] = "i";
-            }
-          }
-        } else {
-          //caso palabra no invertida
-          for (let j = 0; j < vocales.length; j++) {
-            if (palabra[i - 1] == vocales[j]) {
-              palabraCopia[i] = "i";
-            }
-          }
-        }
-        /*  //salida del for j*/
-      }
-    } //salida del if ==y
-  }
-  for (let i = largoPalabra - 1; i >= 0; i--) {
-    let caracter = palabraCopia[i];
-    let caracterRecibido = vCH(caracter);
-    indPalabra = indPalabra.concat(caracterRecibido);
-  }
-  for (let i = 0; i < largoPalabra; i++) {
-    if (indPalabra[i] == "v") {
-      let n = largoPalabra - 1 - i;
-      let caracter1 = palabra[n];
-      secVocales = secVocales.concat(caracter1);
-    } else if (indPalabra[i] == "c") {
-      i = largoPalabra;
-    }
-  }
-  secVocales = invertirPalabra(secVocales);
-  return secVocales;
-}
 
 // → movido a utils.js
 
@@ -1498,49 +1435,8 @@ function triptongoSilaba(a) {
  * Excepción: "uie" y "uia" son triptongos garantizados (como en "buey"),
  * se devuelve 0 y se maneja en el nivel superior.
  */
-function tresVocales(t) {
-  let trip = t;
-  let trip1 = t;
-  let caso = 0;
+// → movido a vocales.js
 
-  // La h es muda: se elimina para evaluar solo las vocales
-  if (trip.match("h"));
-  {
-    trip = trip.replace(/h/, "");
-  }
-
-  if (!(trip == "uie" || trip == "uia")) {
-    // Codificación 1 (trip): í y ú se tratan igual que las demás fuertes
-    trip = trip.replaceAll("á", "F").replaceAll("é", "F").replaceAll("ó", "F");
-    trip = trip.replaceAll("í", "F").replaceAll("ú", "F");
-    trip = trip.replaceAll("a", "F").replaceAll("e", "F").replaceAll("o", "F");
-    trip = trip.replaceAll("i", "d").replaceAll("u", "d");
-
-    // Codificación 2 (trip1): í y ú se marcan como "f" para detectar acento en débil
-    trip1 = trip1.replaceAll("á", "F").replaceAll("é", "F").replaceAll("ó", "F");
-    trip1 = trip1.replaceAll("í", "f").replaceAll("ú", "f");
-    trip1 = trip1.replaceAll("a", "F").replaceAll("e", "F").replaceAll("o", "F");
-    trip1 = trip1.replaceAll("i", "d").replaceAll("u", "d");
-
-    if (trip == "FFF") {
-      caso = 1; // tres fuertes → tres sílabas
-    }
-
-    if (trip == "FFd" || trip == "FdF" || trip == "Fdd" || trip == "ddF") {
-      caso = 2; // hay diptongo → dos sílabas
-    }
-
-    if (trip == "dFF") {
-      if (trip1 == "dfF") {
-        caso = 4; // débil acentuada (í/ú) + fuertes → se rompe el triptongo
-      } else {
-        caso = 3; // débil sin acento + fuertes → triptongo válido
-      }
-    }
-  }
-
-  return caso;
-}
 
 /**
  * Detecta hiatos dentro de las sílabas y las divide cuando corresponde.
@@ -1742,30 +1638,8 @@ function hiatoSilaba(a) {
  * porque el acento en vocal fuerte no rompe el diptongo — solo se
  * normaliza para simplificar la comparación.
  */
-function hiato(s) {
-  let dip = s;
-  let b;
+// → movido a vocales.js
 
-  // La h es muda: se elimina para evaluar las vocales en contacto real
-  if (dip.match("h"));
-  {
-    dip = dip.replace("h", "");
-  }
-
-  // Normaliza vocales fuertes acentuadas (á→a, é→e, ó→o)
-  // El acento en vocal fuerte no rompe el diptongo, solo marca énfasis
-  dip = dip.replaceAll("á", "a");
-  dip = dip.replaceAll("é", "e");
-  dip = dip.replaceAll("ó", "o");
-
-  b =
-    dip == "aa" || dip == "ee" || dip == "oo" || dip == "ii" || dip == "uu" || // vocales iguales
-    dip == "ae" || dip == "ea" || dip == "ao" || dip == "oa" || dip == "eo" || dip == "oe" || // abiertas distintas
-    dip == "aí" || dip == "aú" || dip == "eí" || dip == "eú" || dip == "oí" || dip == "oú" || // fuerte + cerrada acentuada
-    dip == "ía" || dip == "úa" || dip == "íe" || dip == "úe" || dip == "ío" || dip == "úe";   // cerrada acentuada + fuerte
-
-  return b;
-}
 
 /**
  * Ajusta el silabeo cuando una sílaba contiene 4 vocales seguidas.
@@ -1979,85 +1853,8 @@ function cuatroSilaba(a) {
  *   "iuei" → dFFd → caso 1
  *   "uiei" → caso con triptongo + débil → otro caso
  */
-function cuatroVocales(t) {
-  let trip = t;
-  let caso = 0;
-  if (trip.match("h"));
-  {
-    trip = trip.replace("h", "");
-  }
-  trip = trip.replaceAll("á", "F");
-  trip = trip.replaceAll("é", "F");
-  trip = trip.replaceAll("ó", "F");
-  trip = trip.replaceAll("í", "f");
-  trip = trip.replaceAll("ú", "f");
-  trip = trip.replaceAll("a", "F");
-  trip = trip.replaceAll("e", "F");
-  trip = trip.replaceAll("o", "F");
-  trip = trip.replaceAll("i", "d");
-  trip = trip.replaceAll("u", "d");
+// → movido a vocales.js
 
-  if (trip == "dFFd") {
-    caso = 1;
-  }
-
-  if (trip == "dfFd") {
-    caso = 2;
-  }
-
-  if (trip == "dFfF") {
-    caso = 3;
-  }
-
-  if (trip == "FFFd") {
-    caso = 4;
-  }
-
-  if (trip == "FfFd") {
-    caso = 5;
-  }
-
-  if (trip == "FFFF") {
-    caso = 6;
-  }
-
-  if (trip == "FFfF") {
-    caso = 7;
-  }
-
-  if (trip == "FdFF") {
-    caso = 8;
-  }
-
-  if (trip == "FdfF") {
-    caso = 9;
-  }
-
-  if (trip == "FFdf") {
-    caso = 10;
-  }
-
-  if (trip == "FFdd") {
-    caso = 11;
-  }
-
-  if (trip == "FdFd") {
-    caso = 12;
-  }
-
-  if (trip == "FddF") {
-    caso = 13;
-  }
-
-  if (trip == "dFdF") {
-    caso = 14;
-  }
-
-  if (trip == "ddFd") {
-    caso = 15;
-  }
-  return caso;
-}
 //--------------------------------------------------------------------------------------------------
 /**
  * Determina si dos vocales en contacto entre palabras forman sinalefa.
@@ -2075,167 +1872,8 @@ function cuatroVocales(t) {
  *
  * Nota: fuerte = a, e, o | débil = i, u, y
  */
-function sinalefa(v) {
-  let sina = false;
-  let sina1 = false;
-  let sina2 = false;
-  let sina3 = false;
-  let sina4 = false;
-  let vocales;
-  vocales = v;
+// → movido a vocales.js
 
-  // Fuerte debil
-  let caso1 = [
-    "ao",
-    "ae",
-    "au",
-    "ai",
-    "ay",
-    "oe",
-    "ou",
-    "oi",
-    "oy",
-    "eu",
-    "ei",
-    "ey",
-    "ui",
-    "uy",
-    "áo",
-    "áe",
-    "áu",
-    "ái",
-    "áy",
-    "óe",
-    "óu",
-    "ói",
-    "óy",
-    "éu",
-    "éi",
-    "éy",
-    "úi",
-    "úy",
-  ];
-  // Debil fuerte
-  let caso2 = [
-    "ia",
-    "ya",
-    "ie",
-    "ye",
-    "io",
-    "yo",
-    "iu",
-    "yu",
-    "ua",
-    "ue",
-    "uo",
-    "ea",
-    "eo",
-    "oa",
-    "oe",
-    "iá",
-    "yá",
-    "ié",
-    "yé",
-    "ió",
-    "yó",
-    "iú",
-    "yú",
-    "uá",
-    "ué",
-    "uó",
-    "eá",
-    "eó",
-    "oá",
-  ];
-  // Vocales iguales
-  let caso3 = [
-    "aa",
-    "ee",
-    "ii",
-    "yy",
-    "oo",
-    "uu",
-    "aá",
-    "eé",
-    "ií",
-    "oó",
-    "uú",
-    "áa",
-    "ée",
-    "íi",
-    "óo",
-    "úu",
-  ];
-
-  let caso4 = [
-    "ía",
-    "íe",
-    "ío",
-    "íu",
-    "íy",
-    "úá",
-    "úé",
-    "úó",
-    "úy",
-    "éa",
-    "éo",
-    "éy",
-    "óa",
-    "óy",
-    "aí",
-    "eí",
-    "oí",
-    "uí",
-    "yí",
-    "aú",
-    "eú",
-    "oú",
-    "yú",
-    "aé",
-    "oé",
-    "yé",
-    "aó",
-    "yó",
-  ];
-
-  for (let i = 0; i < caso1.length; i++) {
-    if (vocales == caso1[i]) {
-      sina1 = true;
-      i = caso1.length;
-    } else {
-      sina1 = false;
-    }
-  }
-
-  for (let i = 0; i < caso2.length; i++) {
-    if (vocales == caso2[i]) {
-      sina2 = true;
-      i = caso2.length;
-    } else {
-      sina2 = false;
-    }
-  }
-
-  for (let i = 0; i < caso3.length; i++) {
-    if (vocales == caso3[i]) {
-      sina3 = true;
-      i = caso3.length;
-    } else {
-      sina3 = false;
-    }
-  }
-
-  for (let i = 0; i < caso4.length; i++) {
-    if (vocales == caso4[i]) {
-      sina4 = true;
-      i = caso4.length;
-    } else {
-      sina4 = false;
-    }
-  }
-  sina = sina1 || sina2 || sina3 || sina4;
-  return sina;
-}
 
 /**
  * Determina si tres vocales consecutivas (de tres palabras distintas) forman trisinalefa.
@@ -2255,69 +1893,8 @@ function sinalefa(v) {
  * Ejemplo que NO forma trisinalefa: vocal muy abierta flanqueada por cerradas
  * donde el ritmo obligaría a dos golpes de voz.
  */
-function triSinalefa(s) {
-  let trio = s;
-  let vocales = new Array(3);
-  let numeros = new Array(3);
+// → movido a vocales.js
 
-  let caso1 = false;
-  let caso2 = false;
-  let caso3 = false;
-  let caso4 = false;
-  let tripSinalefa = false;
-
-  vocales[0] = trio.substring(0, 1);
-  vocales[1] = trio.substring(1, 2);
-  vocales[2] = trio.substring(2);
-
-  for (let i = 0; i < 3; i++) {
-    if (vocales[i] == "a") {
-      numeros[i] = 5;
-    }
-    if (vocales[i] == "á") {
-      numeros[i] = 5;
-    }
-    if (vocales[i] == "o") {
-      numeros[i] = 4;
-    }
-    if (vocales[i] == "ó") {
-      numeros[i] = 4;
-    }
-    if (vocales[i] == "e") {
-      numeros[i] = 3;
-    }
-    if (vocales[i] == "é") {
-      numeros[i] = 3;
-    }
-    if (vocales[i] == "u") {
-      numeros[i] = 2;
-    }
-    if (vocales[i] == "ú") {
-      numeros[i] = 2;
-    }
-    if (vocales[i] == "i") {
-      numeros[i] = 1;
-    }
-    if (vocales[i] == "í") {
-      numeros[i] = 1;
-    }
-    if (vocales[i] == "y") {
-      numeros[i] = 1;
-    }
-  }
-
-  // sinalefa vocal más abierta en medio.
-  caso1 = numeros[1] >= numeros[0] && numeros[1] >= numeros[2];
-  // Sinalefa ascendente
-  caso2 = numeros[0] >= numeros[1] && numeros[1] >= numeros[2];
-  // Sinalefa descendente
-  caso3 = numeros[0] <= numeros[1] && numeros[1] <= numeros[2];
-  // Sinalefa todas las vocales iguales
-  caso4 = numeros[0] == numeros[1] && numeros[1] == numeros[2];
-
-  tripSinalefa = caso1 || caso2 || caso3 || caso4;
-  return tripSinalefa;
-}
 
 /*function monosilabo(mono) {
  pal= leerVerso(mono); 
