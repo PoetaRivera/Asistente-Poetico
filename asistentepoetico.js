@@ -435,6 +435,23 @@ function depurarVerso(fila) {
   return versoDepurado;
 }
 
+/**
+ * Orquesta el análisis poético completo de un verso: detecta y marca todas
+ * las sinalefas (de dos y tres palabras) e imprime el resultado con "~".
+ * Entrada : string del verso completo (puede tener mayúsculas y signos)
+ * Salida  : arreglo de palabras con sílabas separadas por "/" y "~" al final
+ *           de cada palabra que forma sinalefa con la siguiente
+ *           (ej: ["ca/sa~", "a/zul"])
+ *
+ * Flujo:
+ *   1. Depura el verso (minúsculas, quita signos) con depurarVerso()
+ *   2. Detecta sinalefas de dos palabras contiguas (tipoSina=2) en todo el verso
+ *   3. Silabea el verso completo con leerVerso()
+ *   4. Cuando hay ≥3 palabras, comprueba si la palabra central (corta: 1-2 letras)
+ *      permite fusionar tres palabras en una sola sinalefa (tipoSina=3)
+ *   5. Marca con "~" las palabras que participan en cada sinalefa
+ *   6. Colapsa múltiples "~~" en un solo "~" por si se marcó dos veces
+ */
 function segundo(filas) {
   let fila = filas; //codigo nuevo
   let wordsVerso = [""];
@@ -612,6 +629,21 @@ function contarSilabasPoetico(verso) {
 
 
 
+/**
+ * Extrae las sílabas relevantes para analizar sinalefa entre 2 o 3 palabras.
+ * Entrada : string con 2 o 3 palabras separadas por espacio;
+ *           la variable global `tipoSina` indica cuántas palabras hay (2 o 3)
+ * Salida  : arreglo de 2 o 3 strings con las vocales de contacto de cada palabra
+ *           (para caso 2: última sílaba de palabra1 + primera de palabra2)
+ *           (para caso 3: igual pero con la palabra del medio completa)
+ *           Si la palabra del medio no es corta (1-2 letras), devuelve ["0"]
+ *
+ * Para caso tipoSina=2:
+ *   - extrae la última sílaba de palabra1 (hacia adelante, invertida)
+ *   - extrae la primera sílaba de palabra2 (invertida → desinvertida)
+ * Para caso tipoSina=3 (solo si palabra2 tiene 1-2 letras y es "a", "o", "ha" o "he"):
+ *   - igual pero incluye la sílaba de palabra2 entre las otras dos
+ */
 function obtenerSilabas(palabras) {
   // extrae silabas casos dos y tres palabras. Para luego determinar sinalefa
   // let versoEntrada = ("#intext1").val();
@@ -678,6 +710,17 @@ function extraerSilabas(p) {
 
 
 
+/**
+ * Determina si tres palabras forman una trisinalefa (tres vocales en un solo golpe).
+ * Entrada : silaba1 = última sílaba de palabra 1 (vocales al final)
+ *           silaba2 = sílaba completa de palabra 2 (la palabra corta del medio)
+ *           silaba3 = primera sílaba de palabra 3 (invertida, vocales al inicio)
+ * Salida  : true si hay trisinalefa, false si no
+ *
+ * Concatena las vocales de los tres extremos y delega en triSinalefa().
+ * Caso especial: si hay 4 vocales y la del medio es "a", cuenta como sinalefa directa
+ * (p. ej. "la aurora": a+a+u → la vocal "a" de "la" se funde con "au" de "aurora").
+ */
 function sinalefaTresPalabras(silaba1, silaba2, silaba3) {
   let silabaDos = silaba2;
   let silabaUno = silaba1;
@@ -699,6 +742,19 @@ function sinalefaTresPalabras(silaba1, silaba2, silaba3) {
   }
 }
 
+/**
+ * Determina si dos palabras forman sinalefa en el límite entre ellas.
+ * Entrada : silaba1 = última sílaba de la primera palabra (vocales al final)
+ *           silaba2 = primera sílaba de la segunda palabra (invertida, vocales al inicio)
+ * Salida  : true si hay sinalefa, false si no
+ *
+ * Casos según cuántas vocales hay en cada extremo:
+ *   1+1 → dos vocales en contacto: delega en sinalefa()
+ *   1+2 → la segunda palabra empieza con diptongo: hay sinalefa si NO es hiato
+ *   2+1 → la primera termina con diptongo: hay sinalefa si NO es hiato
+ *   2+2 → ambas terminan/empiezan con diptongo: sinalefa solo si ninguno es hiato
+ *   cualquier otro caso (cadena vacía) → false
+ */
 function sinalefaDosPalabras(silaba1, silaba2) {
   let silabaDos = silaba2;
   let silabaUno = silaba1;
