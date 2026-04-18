@@ -56,6 +56,14 @@ let tipoSina = 2; //determina el tipo de sinalefa
 let tamanoInicialVentana = "25vh";
 let ampliar = true;
 
+/**
+ * Limpia todos los textarea y deshabilita el botón de limpiar.
+ * Entrada : ninguna (lee los elementos del DOM por id)
+ * Salida  : ninguna (efecto de lado: vacía los campos y restaura altura mínima)
+ *
+ * Restablece la altura de cada textarea al valor inicial (--tamanoVentanaMin)
+ * para deshacer el efecto de ampliarVentanas().
+ */
 function limpiar() {
   // limpia todos loa textarea
   const boton3 = document.getElementById("boton3");
@@ -99,6 +107,16 @@ function largoMayor(arre) {
   return mayor;
 }
 
+/**
+ * Alterna entre dos modos de altura de los textarea: ajustada al contenido o mínima.
+ * Entrada : ninguna — usa la variable global `ampliar` como interruptor
+ * Salida  : ninguna (efecto de lado: modifica `style.height` de los textarea)
+ *
+ * Cuando ampliar=true: fuerza "height:auto" y luego ajusta al scrollHeight real,
+ * permitiendo que el área crezca para mostrar todo el texto sin scroll interno.
+ * Cuando ampliar=false: restaura la altura mínima definida en CSS (--tamanoVentanaMin).
+ * Invierte el valor de `ampliar` al final para que el siguiente clic haga lo contrario.
+ */
 function ampliarVentanas() {
   const intext1 = document.getElementById("intext1");
   const outtext1 = document.getElementById("outtext1");
@@ -150,7 +168,21 @@ function obtenerTamanoPantalla() {
   body.css("height", alto + "px");
 }
 
-// Este es el programa principal
+/**
+ * Función principal: lee el poema del textarea, lo procesa verso a verso
+ * y muestra los resultados en los cuatro paneles de salida.
+ * Entrada : ninguna — lee `intext1.value` del DOM
+ * Salida  : ninguna (efecto de lado: escribe en outtext1..4 y habilita boton3)
+ *
+ * Para cada verso:
+ *   outtext1 — verso con sílabas ortográficas separadas por "/"
+ *   outtext2 — conteo ortográfico de sílabas por verso
+ *   outtext3 — verso con sílabas poéticas (incluye "~" para sinalefas)
+ *   outtext4 — conteo poético de sílabas por verso
+ *
+ * La numeración de versos (1--, 2--...) se añade como prefijo a cada línea
+ * para facilitar la lectura del resultado en los textarea.
+ */
 function principal() {
   let arrSilOrto = [""];
   let arrVerOrto = [""];
@@ -210,7 +242,11 @@ function principal() {
   }
 }
 
-// lee versos de entrada y guarda cada verso en cada elmento del arreglo lineas
+/**
+ * Lee el textarea de entrada y divide el poema en versos individuales.
+ * Entrada : ninguna — lee `intext1.value` del DOM
+ * Salida  : arreglo de strings, uno por verso, sin líneas vacías
+ */
 function leerFila() {
   const intext1 = document.getElementById("intext1");
   let s = intext1.value;
@@ -221,8 +257,23 @@ function leerFila() {
 }
 
 
-//Determina si una palabra es aguda, llana o esdrújula
-// Devuelve 1 si es aguda, 0 si es llana y -1 si es esdrujula.
+/**
+ * Clasifica una palabra según la posición del acento (tónico o convencional).
+ * Entrada : string de palabra ya silabada con "/" (ej: "ca/sa", "á/gil", "mú/si/ca")
+ * Salida  : 1 = aguda (acento en última sílaba)
+ *           0 = llana (acento en penúltima sílaba)
+ *          -1 = esdrújula (acento en antepenúltima o anterior)
+ *
+ * Algoritmo:
+ *   1. Busca tilde explícita (á é í ó ú) — posición directa
+ *   2. Si no hay tilde, aplica la regla ortográfica:
+ *      - Termina en s, n o vocal → llana (0)
+ *      - Cualquier otra consonante → aguda (1)
+ *   3. Monosílabos siempre se tratan como agudos (1) para el conteo métrico
+ *
+ * El valor de retorno se usa en contarSilabasPoetico() para el ajuste final:
+ *   aguda (+1), llana (0), esdrújula (−1).
+ */
 function determinaAcentoPalabra(palabra) {
   const arregloVocalesAcento = ["á", "é", "í", "ó", "ú"];
   const silabas = palabra.split("/");
@@ -570,6 +621,15 @@ function segundo(filas) {
   return conta2;
 }*/
 
+/**
+ * Cuenta las sílabas ortográficas totales de un verso.
+ * Entrada : arreglo de palabras silabadas (salida de leerVerso)
+ *           caracter = separador de sílabas (siempre "/")
+ * Salida  : número entero con el total de sílabas del verso
+ *
+ * Por cada palabra: cuenta las apariciones de "/" y le suma 1
+ * (n separadores = n+1 sílabas). Si la palabra no tiene separador, vale 1.
+ */
 function contarSilabasOrtografico(arreglo, caracter) {
   let totalSilabas = 0;
 
@@ -608,6 +668,20 @@ function contarSilabasOrtografico(arreglo, caracter) {
   return total;
 }*/
 
+/**
+ * Calcula el ajuste poético sobre el conteo ortográfico.
+ * Entrada : arreglo de palabras marcadas por segundo() (palabras con "~" al final
+ *           indican sinalefa con la palabra siguiente)
+ * Salida  : número entero (negativo o positivo) que se SUMA al conteo ortográfico:
+ *           −1 por cada sinalefa + ajuste por acento de la última palabra
+ *
+ * Regla de acento final (se suma al resultado):
+ *   aguda  (+1): el verso suena con una sílaba extra al final
+ *   llana  ( 0): sin ajuste
+ *   esdrújula (−1): se descuenta una sílaba
+ *
+ * Ejemplo: "amor eterno" → orto=5, conta=0 sinalefas, acento aguda(+1) → poético=6
+ */
 function contarSilabasPoetico(verso) {
   let conta = 0;
 
@@ -798,8 +872,17 @@ function sinalefaDosPalabras(silaba1, silaba2) {
   }
 }
 
-//recibe una cadena(verso) y devuelve un arreglo donde cada palabra se almacena en una
-//posicion separada en silabas por el caracter "/"
+/**
+ * Silabea un verso completo palabra por palabra y devuelve las sílabas ortográficas.
+ * Entrada : string con el verso (puede tener varias palabras separadas por espacio)
+ * Salida  : arreglo donde cada elemento es una palabra con sus sílabas separadas por "/"
+ *           (ej: ["ca/sa", "a/zul"])
+ *
+ * Pipeline por cada palabra:
+ *   separaPalabra → cuatroSilaba → triptongoSilaba → hiatoSilaba
+ * Luego une las sílabas con "/" y almacena la palabra resultante en el arreglo.
+ * Esta función produce la vista ortográfica; para la poética (con sinalefas) se usa segundo().
+ */
 function leerVerso(s) {
   let miArreglo = [" "];
   let miArregloh = [" "];
