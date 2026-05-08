@@ -36,9 +36,11 @@ export function limpiar() {
 
   const analisis = document.getElementById("analisis-completo");
   if (analisis) {
-    analisis.style.display = "none";
+    analisis.classList.remove("visible");
     const contenido = document.getElementById("contenido-analisis");
-    if (contenido) contenido.innerHTML = "";
+    if (contenido) {
+      while (contenido.firstChild) contenido.removeChild(contenido.firstChild);
+    }
   }
 }
 
@@ -203,7 +205,7 @@ export function analisisCompleto() {
   if (sugerencias) cont.appendChild(sugerencias);
 
   const seccion = document.getElementById("analisis-completo");
-  seccion.style.display = "block";
+  seccion.classList.add("visible");
 }
 
 function crearResumen(r, forma) {
