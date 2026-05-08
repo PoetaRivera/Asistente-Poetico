@@ -1,5 +1,6 @@
 import { depurarVerso } from './utils.js';
 import { leerVerso, segundo, contarSilabasOrtografico, contarSilabasPoetico } from './metrica.js';
+import { analizarPoema } from './analizador.js';
 
 let tamanoInicialVentana = '25vh';
 let ampliar = true;
@@ -32,6 +33,13 @@ export function limpiar() {
   outtext3.style.height = tamanoInicialVentana;
   outtext4.value = "";
   outtext4.style.height = tamanoInicialVentana;
+
+  const analisis = document.getElementById("analisis-completo");
+  if (analisis) {
+    analisis.style.display = "none";
+    const contenido = document.getElementById("contenido-analisis");
+    if (contenido) contenido.innerHTML = "";
+  }
 }
 
 /**
@@ -172,4 +180,78 @@ export function leerFila() {
   lineas = lineas.filter((element) => element != ""); //elimina elementos vacios ""
   return lineas;
 }
+
+export function analisisCompleto() {
+  const intext1 = document.getElementById("intext1");
+  if (!intext1.value.trim()) return;
+
+  const r = analizarPoema(intext1.value);
+  const cont = document.getElementById("contenido-analisis");
+
+  const forma = r.estructura.tipoProbable;
+  const esperado = metroEsperado(forma, r.versos.length, r.estructura);
+  const ok = (sl, i) => {
+    if (esperado[i] !== undefined) return sl === esperado[i];
+    if (forma === 'silva') return sl === 7 || sl === 11;
+    return sl === r.metroDominante;
+  };
+
+  cont.innerHTML = `
+    <div class="resumen-analisis">
+      <span><strong>Versos:</strong> ${r.totalVersos}</span>
+      <span><strong>Metro dominante:</strong> ${r.metroDominante ?? '--'}s</span>
+      <span><strong>Forma:</strong> ${forma} (${Math.round(r.estructura.confianza * 100)}%)</span>
+      <span><strong>Rima:</strong> ${r.rima.tipoProbable} | ${r.rima.patronConsonante}</span>
+    </div>
+
+    <table class="tabla-analisis">
+      <thead><tr>
+        <th>#</th><th>Sil. poéticas</th><th>Rima</th><th>Palabra final</th><th>Estado</th>
+      </tr></thead>
+      <tbody>
+        ${r.versos.map((v, i) => {
+          const letra = r.rima.versos[i]?.letraConsonante;
+          const palabra = r.rima.versos[i]?.palabra ?? '';
+          const esOk = ok(v.silabasPoeticas, i);
+          return `
+          <tr class="${esOk ? '' : 'fila-desviada'}">
+            <td>${v.numero}</td>
+            <td>${v.silabasPoeticas}</td>
+            <td title="${r.rima.versos[i]?.consonante ?? ''}">${letra && letra !== '-' ? letra : '·'}</td>
+            <td>${palabra}</td>
+            <td>${esOk ? '✓' : '⚠'}</td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>
+
+    ${r.versos.some((v) => v.sugerenciasMetricas?.opciones?.length > 0) ? `
+    <div class="titulo-seccion">Sugerencias métricas</div>
+    ${r.versos.filter((v) => v.sugerenciasMetricas?.opciones?.length > 0).map((v) => `
+      <div class="sugerencia">
+        <strong>Verso ${v.numero}:</strong> ${v.sugerenciasMetricas.explicacion}
+        <ul>${v.sugerenciasMetricas.opciones.map((o) => `<li><em>${o.tipo}:</em> ${o.consejo}</li>`).join('')}</ul>
+      </div>
+    `).join('')}
+    ` : ''}
+  `;
+
+  const seccion = document.getElementById("analisis-completo");
+  seccion.style.display = "block";
+}
+
+function metroEsperado(forma, total, estructura) {
+  // Formas con patrón métrico fijo por posición
+  if (forma === 'lira') return [7, 11, 7, 7, 11];
+  if (forma === 'seguidilla') return [7, 5, 7, 5];
+  // Silva: cualquier verso de 7 u 11 es válido
+  if (forma === 'silva') {
+    return Array(total).fill(null).map(() => null); // null = cualquier 7 o 11
+  }
+  // Si la estructura ya tiene metrosAjustados, usarlos
+  if (estructura.metrosAjustados) return estructura.metrosAjustados;
+  // Para el resto, se compara contra metroDominante (comportamiento por defecto)
+  return [];
+}
+
 

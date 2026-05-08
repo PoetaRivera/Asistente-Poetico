@@ -1,4 +1,4 @@
-import { principal, limpiar, ampliarVentanas } from "./ui.js";
+import { principal, limpiar, ampliarVentanas, analisisCompleto } from "./ui.js";
 
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const boton1 = document.getElementById("boton1");
   const boton2 = document.getElementById("boton2");
   const boton3 = document.getElementById("boton3");
+  const botonAnalisis = document.getElementById("botonAnalisis");
   const intext1 = document.getElementById("intext1");
   const outtext1 = document.getElementById("outtext1");
   const outtext2 = document.getElementById("outtext2");
@@ -17,6 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
   boton1.addEventListener("click", principal);
   boton2.addEventListener("click", limpiar);
   boton3.addEventListener("click", ampliarVentanas);
+  botonAnalisis.addEventListener("click", analisisCompleto);
 
   intext1.addEventListener("scroll", () => {
     let y = intext1.scrollTop;

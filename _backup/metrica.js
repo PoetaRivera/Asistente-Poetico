@@ -2,6 +2,9 @@ import { depurarVerso, invertirPalabra } from './utils.js';
 import { extraeVocales, hiato, sinalefa, triSinalefa } from './vocales.js';
 import { separaPalabra, cuatroSilaba, triptongoSilaba, hiatoSilaba } from './silabeo.js';
 
+// Determina tipo de sinalefa: 2 = dos palabras, 3 = tres palabras
+let tipoSina = 2;
+
 /**
  * Orquesta el análisis poético completo de un verso: detecta y marca todas
  * las sinalefas (de dos y tres palabras) e imprime el resultado con "~".
@@ -20,15 +23,27 @@ import { separaPalabra, cuatroSilaba, triptongoSilaba, hiatoSilaba } from './sil
  *   6. Colapsa múltiples "~~" en un solo "~" por si se marcó dos veces
  */
 export function segundo(filas) {
-  let fila = filas;
+  let fila = filas; //codigo nuevo
   let wordsVerso = [""];
   let versoConS = [""];
   let sinalefaa = [""];
   let trisinalefaa = [""];
   let versoSalida = [""];
+  let sinalefaaExterior = false;
 
+  let largo;
+  let verso = "";
+
+  /* let s = ("#intext1").val();
+     //obtiene el verso y elimina blancos al inició o/y al final.
+     verso = s;
+     verso = s.trim();*/
   let s = depurarVerso(fila);
-  let verso = s;
+  verso = s;
+  let versoCopia = verso; //Se crea una copia del verso inicial
+
+  //determina número de caracteres del verso incluyendo blancos
+  largo = verso.length;
 
   // almacena cada palabra en un arreglo y determina el número de palabras
   wordsVerso = verso.split(" ");
@@ -38,9 +53,10 @@ export function segundo(filas) {
   versoConS = wordsVerso;
 
   //Determina todas las sinalefas de dos palabras, del verso, con ~
+  tipoSina = 2;
   for (let i = 0; i < versoConS.length - 1; i++) {
     let palabras = versoConS[i] + " " + versoConS[i + 1];
-    let misSilabas = obtenerSilabas(palabras, 2);
+    let misSilabas = obtenerSilabas(palabras);
     sinalefaa[i] = sinalefaDosPalabras(misSilabas[0], misSilabas[1]);
   }
   versoSalida = leerVerso(s);
@@ -54,13 +70,15 @@ export function segundo(filas) {
       ) {
         let cadenaS =
           versoConS[i - 1] + " " + versoConS[i] + " " + versoConS[i + 1];
-        let misSilabas = obtenerSilabas(cadenaS, 3);
+        tipoSina = 3;
+        let misSilabas = obtenerSilabas(cadenaS);
         if (misSilabas[0] != "0") {
           trisinalefaa = sinalefaTresPalabras(
             misSilabas[0],
             misSilabas[1],
             misSilabas[2]
           );
+          let j = (i - 1) / 2;
           if (trisinalefaa) {
             versoSalida[i - 1] = versoSalida[i - 1].concat("~");
             versoSalida[i] = versoSalida[i].concat("~");
@@ -114,11 +132,13 @@ export function segundo(filas) {
  * Para caso tipoSina=3 (solo si palabra2 tiene 1-2 letras y es "a", "o", "ha" o "he"):
  *   - igual pero incluye la sílaba de palabra2 entre las otras dos
  */
-export function obtenerSilabas(palabras, tipo) {
+export function obtenerSilabas(palabras) {
+  // extrae silabas casos dos y tres palabras. Para luego determinar sinalefa
+  // let versoEntrada = ("#intext1").val();
   let versoEntrada = palabras;
   let versoSalida = [];
   versoSalida = leerVerso(versoEntrada);
-  if (tipo == 2) {
+  if (tipoSina == 2) {
     //caso dos palabras
     let palabra1 = versoSalida[0];
     let palabra2 = versoSalida[1];
@@ -130,7 +150,7 @@ export function obtenerSilabas(palabras, tipo) {
     misSilabas[0] = silaba1;
     misSilabas[1] = silaba2;
     return misSilabas;
-  } else if (tipo == 3) {
+  } else if (tipoSina == 3) {
     //caso tres palabras
     let palabra1 = versoSalida[0];
     let palabra2 = versoSalida[1];
@@ -142,6 +162,9 @@ export function obtenerSilabas(palabras, tipo) {
     let silaba3 = extraerSilabas(palabra3inv);
     silaba1 = invertirPalabra(silaba1);
     silaba2 = invertirPalabra(silaba2);
+    let largosilaba2 = silaba2.length;
+    let largosilaba3 = silaba3.length;
+    let largosilaba1 = silaba1.length;
     if (largoPalabra2 == 2 && (silaba2 == "ha" || silaba2 == "he")) {
       let misSilabas = [];
       misSilabas[0] = silaba1;
@@ -266,7 +289,7 @@ export function sinalefaDosPalabras(silaba1, silaba2) {
       // sinalefa dos palabras cuatro vocales 2-2
     } else if (largoVocalesUno == 2 && largoVocalesDos == 2) {
       sinalefaa1 = !hiato(vocalesPalUno);
-      sinalefaa2 = !hiato(vocalesPalDos);
+      sinalefaa2 = !hiato(vocalesPalUno);
       sinalefaa = sinalefaa1 && sinalefaa2;
       return sinalefaa;
     }
@@ -292,16 +315,34 @@ export function leerVerso(s) {
   let miArregloh = [" "];
   let miArreglohh = [" "];
   let miArreglohhh = [" "];
+  let miArreglohS = [""];
   let miArregloSil = [""];
+  let miArreglohSil = [""];
+  let wordsVerso = [""];
+  let versoConS = [""];
 
+  let largo;
   let var1 = "";
-  let verso = s.trim();
+  let verso = "";
 
-  let wordsVerso = verso.split(" ");
+  //obtiene el verso y elimina blancos al inició o/y al final.
+  verso = s;
+  verso = s.trim();
+  let versoCopia = verso; //Se crea una copia del verso inicial
+
+  //determina número de caracteres del verso incluyendo blancos
+  largo = verso.length;
+
+  // almacena cada palabra en un arreglo y determina el número de palabras
+  wordsVerso = verso.split(" ");
   let numPalabras = wordsVerso.length;
 
   //crea nuevo arreglo donde se guardara cada palabra del verso, pero dividida por /
   miArregloSil = Array(1).fill(""); //division ortografica
+  miArreglohSil = Array(1).fill(""); // division con triptongos y diptongos
+
+  //Crea una copia del verso para indicar  las sinalefas entre palabras con ~
+  versoConS = wordsVerso;
 
   //lee palabra por palabra del verso
   for (let j = 0; j < numPalabras; j++) {
@@ -322,6 +363,7 @@ export function leerVerso(s) {
     }
 
     //Guarda palabras en silabas divididas por / en nuevo arreglo
+    let largoVar1 = var1.length;
     var1 = var1.substring(0, var1.length - 1);
     miArregloSil[j] = var1;
     var1 = "";
@@ -438,8 +480,8 @@ export function contarSilabasPoetico(v) {
       conta++;
     }
   }
-  let ajusteAcento = determinaAcentoPalabra(verso[verso.length - 1]);
-  let total = -conta + ajusteAcento;
+  determinaAcentoPalabra(verso[verso.length - 1]);
+  let total = -conta + determinaAcentoPalabra(verso[verso.length - 1]);
 
   return total;
 }

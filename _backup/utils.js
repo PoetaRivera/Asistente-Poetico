@@ -8,11 +8,6 @@
  * del alfabeto español (incluyendo diéresis ä ë ï ö ü para préstamos).
  * La "y" se conserva porque actúa como vocal en posición final (ley, rey).
  */
-/**
- * Limpia un verso: minúsculas, sin puntuación, espacios simples.
- * @param {string} fila - Verso crudo
- * @returns {string} Verso depurado
- */
 export function depurarVerso(fila) {
   const caracteresValidos = new Set([
     "a", "e", "i", "o", "u",
@@ -49,7 +44,6 @@ export function depurarVerso(fila) {
  * leyendo desde el inicio del string invertido en lugar del final del original.
  * Ejemplo: "amor" → "roma"
  */
-/** @param {string} p @returns {string} */
 export function invertirPalabra(p) {
   let palabra = p;
   let revPalabra = "";
@@ -73,17 +67,34 @@ export function invertirPalabra(p) {
  * La "h" recibe su propio código porque es muda y necesita tratamiento
  * especial en el análisis de diptongos e hiatos.
  */
-/** @param {string} s - Carácter @returns {"v"|"h"|"c"} */
 export function vCH(s) {
-  const vocales = ["a", "e", "i", "o", "u", "á", "é", "í", "ó", "ú"];
+  let caracterIn = s;
+  let vocales = ["a", "e", "i", "o", "u", "á", "é", "í", "ó", "ú"];
 
-  for (let k = 0; k < vocales.length; k++) {
-    if (vocales[k] === s) {
-      return "v";
+  let vch = false;
+  let caracterOut = " ";
+  let largoVocales = vocales.length;
+
+  for (let k = 0; k < largoVocales; k++) {
+    if (vocales[k] == caracterIn) {
+      vch = true;
+      caracterOut = "v";
+      k = vocales.length;
+    } else {
+      vch = false;
     }
   }
-  if (s === "h") return "h";
-  return "c";
+  if (vch == false) {
+    if ("h" == caracterIn) {
+      caracterOut = "h";
+    } else if ("y" == caracterIn) {
+      caracterOut = "c";
+    } else {
+      caracterOut = "c";
+    }
+  }
+
+  return caracterOut;
 }
 
 /**
@@ -94,24 +105,28 @@ export function vCH(s) {
  * triptongoSilaba, hiatoSilaba y cuatroSilaba producen arreglos ×2/×3/×4
  * con huecos como separadores. nuevoArreglo los limpia antes de continuar.
  */
-/** @param {string[]} a - Arreglo con huecos @returns {string[]} Arreglo compacto */
 export function nuevoArreglo(a) {
+  let j = 0;
+  let i = 0;
   let numNuevo = 0;
 
+  let out = [];
+  out = a;
+
   // Cuenta cuántas posiciones tienen contenido real
-  for (let i = 0; i < a.length; i++) {
-    if (!(a[i] === " " || a[i] === "")) {
+  for (i = 0; i < out.length; i++) {
+    if (!(out[i] == " " || out[i] == "")) {
       numNuevo++;
     }
   }
 
   // Transfiere solo las sílabas válidas al nuevo arreglo
-  const nuevo = new Array(numNuevo);
-  let idx = 0;
-  for (let j = 0; j < a.length; j++) {
-    if (!(a[j] === " " || a[j] === "")) {
-      nuevo[idx] = a[j];
-      idx++;
+  let nuevo = [numNuevo];
+  i = 0;
+  for (j = 0; j < out.length; j++) {
+    if (!(out[j] == " " || out[j] == "")) {
+      nuevo[i] = out[j];
+      i++;
     }
   }
   return nuevo;

@@ -15,7 +15,6 @@ import { vCH, invertirPalabra } from "./utils.js";
  * analizar el inicio de la segunda palabra sin revertirla dos veces).
  * La "y" final se convierte a "i" cuando va precedida de vocal (ley → lei).
  */
-/** @param {string} p - Sílaba @param {string} [d] - "inv" si está invertida @returns {string} */
 export function extraeVocales(p, d) {
   let palabra = p;
   let palabraCopia = p.split("");  // array mutable para sustituir 'y' → 'i'
@@ -85,27 +84,29 @@ export function extraeVocales(p, d) {
  * porque el acento en vocal fuerte no rompe el diptongo — solo se
  * normaliza para simplificar la comparación.
  */
-const HIATO_PARES = new Set([
-  // Vocales iguales
-  "aa", "ee", "oo", "ii", "uu",
-  // Abiertas distintas
-  "ae", "ea", "ao", "oa", "eo", "oe",
-  // Fuerte + cerrada acentuada
-  "aí", "aú", "eí", "eú", "oí", "oú",
-  // Cerrada acentuada + fuerte
-  "ía", "úa", "íe", "úe", "ío", "úo",
-]);
-
-/** @param {string} s - Par de vocales @returns {boolean} */
 export function hiato(s) {
-  // La h es muda: se elimina. Normaliza vocales fuertes acentuadas.
-  const dip = s
-    .replace("h", "")
-    .replaceAll("á", "a")
-    .replaceAll("é", "e")
-    .replaceAll("ó", "o");
+  let dip = s;
+  let b;
 
-  return HIATO_PARES.has(dip);
+  // La h es muda: se elimina para evaluar las vocales en contacto real
+  if (dip.match("h"));
+  {
+    dip = dip.replace("h", "");
+  }
+
+  // Normaliza vocales fuertes acentuadas (á→a, é→e, ó→o)
+  // El acento en vocal fuerte no rompe el diptongo, solo marca énfasis
+  dip = dip.replaceAll("á", "a");
+  dip = dip.replaceAll("é", "e");
+  dip = dip.replaceAll("ó", "o");
+
+  b =
+    dip == "aa" || dip == "ee" || dip == "oo" || dip == "ii" || dip == "uu" || // vocales iguales
+    dip == "ae" || dip == "ea" || dip == "ao" || dip == "oa" || dip == "eo" || dip == "oe" || // abiertas distintas
+    dip == "aí" || dip == "aú" || dip == "eí" || dip == "eú" || dip == "oí" || dip == "oú" || // fuerte + cerrada acentuada
+    dip == "ía" || dip == "úa" || dip == "íe" || dip == "úe" || dip == "ío" || dip == "úe";   // cerrada acentuada + fuerte
+
+  return b;
 }
 
 /**
@@ -124,42 +125,71 @@ export function hiato(s) {
  *
  * Nota: fuerte = a, e, o | débil = i, u, y
  */
-// Conjuntos precomputados para búsqueda O(1) de pares de vocales que forman sinalefa
-const SINALEFA_PARES = new Set([
-  // Fuerte + débil
-  "ao", "ae", "au", "ai", "ay",
-  "oe", "ou", "oi", "oy",
-  "eu", "ei", "ey",
-  "ui", "uy",
-  "áo", "áe", "áu", "ái", "áy",
-  "óe", "óu", "ói", "óy",
-  "éu", "éi", "éy",
-  "úi", "úy",
-  // Débil + fuerte
-  "ia", "ya", "ie", "ye", "io", "yo", "iu", "yu",
-  "ua", "ue", "uo",
-  "ea", "eo", "oa", "oe",
-  "iá", "yá", "ié", "yé", "ió", "yó", "iú", "yú",
-  "uá", "ué", "uó",
-  "eá", "eó", "oá",
-  // Vocales iguales
-  "aa", "ee", "ii", "yy", "oo", "uu",
-  "aá", "eé", "ií", "oó", "uú",
-  "áa", "ée", "íi", "óo", "úu",
-  // Cerrada acentuada + otra (o viceversa)
-  "ía", "íe", "ío", "íu", "íy",
-  "úá", "úé", "úó", "úy",
-  "éa", "éo", "éy",
-  "óa", "óy",
-  "aí", "eí", "oí", "uí", "yí",
-  "aú", "eú", "oú", "yú",
-  "aé", "oé", "yé",
-  "aó", "yó",
-]);
-
-/** @param {string} v - Par de vocales @returns {boolean} */
 export function sinalefa(v) {
-  return SINALEFA_PARES.has(v);
+  let sina = false;
+  let sina1 = false;
+  let sina2 = false;
+  let sina3 = false;
+  let sina4 = false;
+  let vocales;
+  vocales = v;
+
+  // Fuerte debil
+  let caso1 = [
+    "ao", "ae", "au", "ai", "ay",
+    "oe", "ou", "oi", "oy",
+    "eu", "ei", "ey",
+    "ui", "uy",
+    "áo", "áe", "áu", "ái", "áy",
+    "óe", "óu", "ói", "óy",
+    "éu", "éi", "éy",
+    "úi", "úy",
+  ];
+  // Debil fuerte
+  let caso2 = [
+    "ia", "ya", "ie", "ye", "io", "yo", "iu", "yu",
+    "ua", "ue", "uo",
+    "ea", "eo", "oa", "oe",
+    "iá", "yá", "ié", "yé", "ió", "yó", "iú", "yú",
+    "uá", "ué", "uó",
+    "eá", "eó", "oá",
+  ];
+  // Vocales iguales
+  let caso3 = [
+    "aa", "ee", "ii", "yy", "oo", "uu",
+    "aá", "eé", "ií", "oó", "uú",
+    "áa", "ée", "íi", "óo", "úu",
+  ];
+
+  let caso4 = [
+    "ía", "íe", "ío", "íu", "íy",
+    "úá", "úé", "úó", "úy",
+    "éa", "éo", "éy",
+    "óa", "óy",
+    "aí", "eí", "oí", "uí", "yí",
+    "aú", "eú", "oú", "yú",
+    "aé", "oé", "yé",
+    "aó", "yó",
+  ];
+
+  for (let i = 0; i < caso1.length; i++) {
+    if (vocales == caso1[i]) { sina1 = true; i = caso1.length; }
+    else { sina1 = false; }
+  }
+  for (let i = 0; i < caso2.length; i++) {
+    if (vocales == caso2[i]) { sina2 = true; i = caso2.length; }
+    else { sina2 = false; }
+  }
+  for (let i = 0; i < caso3.length; i++) {
+    if (vocales == caso3[i]) { sina3 = true; i = caso3.length; }
+    else { sina3 = false; }
+  }
+  for (let i = 0; i < caso4.length; i++) {
+    if (vocales == caso4[i]) { sina4 = true; i = caso4.length; }
+    else { sina4 = false; }
+  }
+  sina = sina1 || sina2 || sina3 || sina4;
+  return sina;
 }
 
 /**
@@ -230,8 +260,8 @@ export function triSinalefa(s) {
  *   0 — no aplica (es triptongo "uie" o "uia", caso especial)
  *   1 — FFF: tres fuertes → se dividen en tres sílabas separadas
  *   2 — débil+fuerte+débil o variantes → diptongo, se divide en 2
- *   3 — dFF o dFd sin acento en débil → triptongo
- *   4 — dFF/dFd con acento en vocal débil → se rompe el triptongo
+ *   3 — dFF sin acento en débil → triptongo, las tres en una sílaba
+ *   4 — dFF con acento en débil (dfF) → se divide: la í/ú acentuada rompe
  *
  * Excepción: "uie" y "uia" son triptongos garantizados (como en "buey"),
  * se devuelve 0 y se maneja en el nivel superior.
@@ -242,7 +272,7 @@ export function tresVocales(t) {
   let caso = 0;
 
   // La h es muda: se elimina para evaluar solo las vocales
-  if (trip.match("h"))
+  if (trip.match("h"));
   {
     trip = trip.replace(/h/, "");
   }
@@ -275,15 +305,6 @@ export function tresVocales(t) {
         caso = 3; // débil sin acento + fuertes → triptongo válido
       }
     }
-
-    // dFd: débil-fuerte-débil (ej: iai en "estudiáis", uai en "Paraguay")
-    if (trip == "dFd") {
-      if (trip1 == "fFd" || trip1 == "dFf" || trip1 == "fFf") {
-        caso = 4; // acento en vocal débil rompe el triptongo
-      } else {
-        caso = 3; // triptongo válido
-      }
-    }
   }
 
   return caso;
@@ -305,7 +326,7 @@ export function tresVocales(t) {
 export function cuatroVocales(t) {
   let trip = t;
   let caso = 0;
-  if (trip.match("h"))
+  if (trip.match("h"));
   {
     trip = trip.replace("h", "");
   }

@@ -341,29 +341,130 @@ body {
 /*---------------------------------------------------------------------------------------------*/
 @media screen and (min-width: 991px){
 
-  #principal{
+  .principal {
     max-width: 1200px;
   }
-#cuerpo {
+  #cuerpo {
     display: flex;
     flex-direction: row;
     align-items: flex-end;
     justify-content: center;
     width: 90vw;
     gap: 30px;
-   
   }
 
- #titulo1, #titulo2
- {font-size: 0.8rem;}
- }
+  #analisis-completo {
+    max-width: 90vw;
+  }
+
+  #titulo1, #titulo2
+  {font-size: 0.8rem;}
+}
 
 
 /* Estilos por defecto */
 body {
   color: var(--colorOscuro3);
 }
+
 /*-----------------------------------------------------------------------------------------*/
+/* Análisis completo */
+#analisis-completo {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 400px;
+  border: 1px solid var(--A700);
+  border-radius: 6px;
+  padding: 6px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  align-self: center;
+}
+
+#titulo-analisis {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--A400);
+  padding: 4px 6px;
+  border-bottom: 1px solid var(--A700);
+  margin-bottom: 6px;
+}
+
+#contenido-analisis {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 8px;
+}
+
+.resumen-analisis {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: 0.8rem;
+  color: var(--colorOscuro1);
+  background-color: var(--backgroundOscuro2);
+  padding: 10px 14px;
+  border-radius: 4px;
+}
+
+.tabla-analisis {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.75rem;
+  color: #000000;
+  background-color: #ffffff;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.tabla-analisis th {
+  background-color: var(--backgroundOscuro2);
+  color: var(--A400);
+  padding: 6px 8px;
+  text-align: center;
+  font-weight: 600;
+  border-bottom: 1px solid var(--A700);
+}
+
+.tabla-analisis td {
+  padding: 4px 8px;
+  text-align: center;
+  border-bottom: 1px solid #e0e0e0;
+  color: #000000;
+}
+
+.fila-desviada td {
+  background-color: #fff3e0;
+}
+
+.titulo-seccion {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--A400);
+  margin-top: 4px;
+}
+
+.sugerencia {
+  font-size: 0.72rem;
+  color: var(--colorOscuro2);
+  background-color: var(--backgroundOscuro2);
+  padding: 8px 12px;
+  border-radius: 4px;
+}
+
+.sugerencia ul {
+  margin: 4px 0 0 0;
+  padding-left: 16px;
+}
+
+.sugerencia li {
+  margin-bottom: 2px;
+  color: var(--colorOscuro1);
+}
+
+/* ----------------------------------------------------------------------------------------- */
 /* Estilos para modo claro */
 @media (prefers-color-scheme: light) {
 
@@ -419,6 +520,29 @@ body {
 #pie{
   background-color: var(--backgroundClaro1);
 }
+
+  #titulo-analisis {
+    color: var(--backgroundOscuro3);
+  }
+
+  .resumen-analisis {
+    background-color: #e8e8e8;
+    color: #000000;
+  }
+
+  .tabla-analisis th {
+    background-color: #e8e8e8;
+    color: var(--backgroundOscuro3);
+  }
+
+  .sugerencia {
+    background-color: #f5f5f5;
+    color: #333333;
+  }
+
+  .sugerencia li {
+    color: #000000;
+  }
 
 }
 

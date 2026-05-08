@@ -1,4 +1,4 @@
-import { nuevoArreglo } from './utils.js';
+import { nuevoArreglo, vCH, invertirPalabra } from './utils.js';
 import { tresVocales, hiato, cuatroVocales } from './vocales.js';
 
 /**
@@ -87,6 +87,8 @@ export function separaPalabra(mipalabra) {
   let ind2 = 0;  // inicio de la sílaba actual en la secuencia (avanza con cada corte)
   let indDC = 30; // posición del último grupo consonántico doble detectado (br, cl, ch...)
   let i = 0;
+  let i_h = 0;
+  let ii = 0;
   let j = 0;
   let m = 0;  // índice de la sílaba actual en pdt[]
   let n = 0;
@@ -352,6 +354,9 @@ export function triptongoSilaba(a) {
     "y",
     "z",
   ];
+  let especiales = ["h"];
+
+  let silaba = "";
   let secuencia = "";
   let cad1 = "vvv";
   let cad2 = "vhvv";
@@ -360,9 +365,14 @@ export function triptongoSilaba(a) {
 
   let ind = -1;
   let ind2 = 0;
+  //int i = 0;
+  //Número consonante
   let j = 0;
+  //silaba en estudio
   let n = 0;
+  //Número de vocal
   let k = 0;
+  let numNuevo = 0;
   let numSilabas = 0;
   let largoSilaba = 0;
   let nconsonantes = consonantes.length;
@@ -372,10 +382,12 @@ export function triptongoSilaba(a) {
   let esvocal = false;
 
   let vvv = false;
+  let vhvv = false;
   let g = false;
 
   let iin = a;
-  numSilabas = iin.length;
+  let largoIn = iin.length;
+  numSilabas = largoIn;
 
   //Hace largo de arreglo de salida igual al doble del número de sílabas
   let largoOut = numSilabas * 3;
@@ -401,7 +413,7 @@ export function triptongoSilaba(a) {
     while (i < largoSilaba) {
       cadena = iin[n];
 
-      if (cadena !== "guía") {
+      if (!(cadena == "guía" || cadena == "guía" || cadena == "guía")) {
         //Determina si es vocal o consonante el caracter en turno
         temp = cadena.substring(i, i + 1);
         k = 0;
@@ -436,7 +448,10 @@ export function triptongoSilaba(a) {
         }
 
         if (secuencia.substring(ind2).includes(cad2)) {
+          vhvv = true;
           ind = secuencia.indexOf(cad2, ind2);
+        } else {
+          vhvv = false;
         }
       } else {
         vvv = true;
@@ -527,19 +542,27 @@ export function hiatoSilaba(a) {
     "r",
     "l",
   ];
+  let especiales = ["h"];
 
+  let silaba = "";
   let secuencia = "";
   let cad1 = "vv";
   let cad2 = "vhv";
+  let cad3 = "vvv";
   let temp = "";
   let cadena = "";
 
   let ind = -1;
   let ind2 = 0;
+  //int i = 0;
+  //Número consonante
   let j = 0;
+  //silaba en estudio
   let n = 0;
+  //Número de vocal
   let k = 0;
 
+  let numNuevo = 0;
   let numSilabas = 0;
   let largoSilaba = 0;
   let nconsonantes = consonantes.length;
@@ -549,6 +572,8 @@ export function hiatoSilaba(a) {
 
   let vv = false;
   let vhv = false;
+  let vvv = false;
+  let tri = false;
 
   let iin = a;
   numSilabas = iin.length;
@@ -693,7 +718,8 @@ export function cuatroSilaba(a) {
     "r",
     "l",
   ];
-
+  let especiales = ["h"];
+  let silaba = "";
   let secuencia = "";
   let cad1 = "vvvv";
   let cad2 = "vhvvv";
@@ -701,18 +727,25 @@ export function cuatroSilaba(a) {
   let cadena = "";
   let ind = -1;
   let ind2 = 0;
+  // int i = 0;
+  // Número consonante
   let j = 0;
+  // silaba en estudio
   let n = 0;
+  // Número de vocal
   let k = 0;
+  let numNuevo = 0;
   let numSilabas = 0;
   let largoSilaba = 0;
   let nconsonantes = consonantes.length;
   let nvocales = vocales.length;
   let esvocal = false;
+  let vvv = false;
   let vvvv = false;
   let vhvvv = false;
   let iin = a;
-  numSilabas = iin.length;
+  let largoIn = iin.length;
+  numSilabas = largoIn;
 
   // Hace largo de arreglo de salida igual al doble del número de sílabas
   let largoOut = numSilabas * 4;
@@ -828,10 +861,7 @@ export function cuatroSilaba(a) {
             oout[4 * n + 2] = iin[n].substring(ind + 3);
             break;
         }
-      }
-      // caso vhvvv reservado para extensión futura
-      /* eslint-disable-next-line no-empty */
-      if (vhvvv) {
+      } else if (vhvvv) {
       }
       i++;
     } //salida de fin de silaba
