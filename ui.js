@@ -187,6 +187,7 @@ export function analisisCompleto() {
 
   const r = analizarPoema(intext1.value);
   const cont = document.getElementById("contenido-analisis");
+  while (cont.firstChild) cont.removeChild(cont.firstChild);
 
   const forma = r.estructura.tipoProbable;
   const esperado = metroEsperado(forma, r.versos.length, r.estructura);
@@ -196,48 +197,121 @@ export function analisisCompleto() {
     return sl === r.metroDominante;
   };
 
-  cont.innerHTML = `
-    <div class="resumen-analisis">
-      <span><strong>Versos:</strong> ${r.totalVersos}</span>
-      <span><strong>Metro dominante:</strong> ${r.metroDominante ?? '--'}s</span>
-      <span><strong>Forma:</strong> ${forma} (${Math.round(r.estructura.confianza * 100)}%)</span>
-      <span><strong>Rima:</strong> ${r.rima.tipoProbable} | ${r.rima.patronConsonante}</span>
-    </div>
-
-    <table class="tabla-analisis">
-      <thead><tr>
-        <th>#</th><th>Sil. poéticas</th><th>Rima</th><th>Palabra final</th><th>Estado</th>
-      </tr></thead>
-      <tbody>
-        ${r.versos.map((v, i) => {
-          const letra = r.rima.versos[i]?.letraConsonante;
-          const palabra = r.rima.versos[i]?.palabra ?? '';
-          const esOk = ok(v.silabasPoeticas, i);
-          return `
-          <tr class="${esOk ? '' : 'fila-desviada'}">
-            <td>${v.numero}</td>
-            <td>${v.silabasPoeticas}</td>
-            <td title="${r.rima.versos[i]?.consonante ?? ''}">${letra && letra !== '-' ? letra : '·'}</td>
-            <td>${palabra}</td>
-            <td>${esOk ? '✓' : '⚠'}</td>
-          </tr>`;
-        }).join('')}
-      </tbody>
-    </table>
-
-    ${r.versos.some((v) => v.sugerenciasMetricas?.opciones?.length > 0) ? `
-    <div class="titulo-seccion">Sugerencias métricas</div>
-    ${r.versos.filter((v) => v.sugerenciasMetricas?.opciones?.length > 0).map((v) => `
-      <div class="sugerencia">
-        <strong>Verso ${v.numero}:</strong> ${v.sugerenciasMetricas.explicacion}
-        <ul>${v.sugerenciasMetricas.opciones.map((o) => `<li><em>${o.tipo}:</em> ${o.consejo}</li>`).join('')}</ul>
-      </div>
-    `).join('')}
-    ` : ''}
-  `;
+  cont.appendChild(crearResumen(r, forma));
+  cont.appendChild(crearTablaAnalisis(r, ok));
+  const sugerencias = crearSugerencias(r);
+  if (sugerencias) cont.appendChild(sugerencias);
 
   const seccion = document.getElementById("analisis-completo");
   seccion.style.display = "block";
+}
+
+function crearResumen(r, forma) {
+  const div = document.createElement("div");
+  div.className = "resumen-analisis";
+
+  const datos = [
+    ["Versos:", String(r.totalVersos)],
+    ["Metro dominante:", (r.metroDominante ?? "--") + "s"],
+    ["Forma:", forma + " (" + Math.round(r.estructura.confianza * 100) + "%)"],
+    ["Rima:", r.rima.tipoProbable + " | " + r.rima.patronConsonante],
+  ];
+
+  for (const [etiqueta, valor] of datos) {
+    const span = document.createElement("span");
+    const strong = document.createElement("strong");
+    strong.textContent = etiqueta;
+    span.appendChild(strong);
+    span.appendChild(document.createTextNode(" " + valor));
+    div.appendChild(span);
+  }
+
+  return div;
+}
+
+function crearTablaAnalisis(r, ok) {
+  const table = document.createElement("table");
+  table.className = "tabla-analisis";
+
+  const thead = document.createElement("thead");
+  const trh = document.createElement("tr");
+  for (const h of ["#", "Sil. poéticas", "Rima", "Palabra final", "Estado"]) {
+    const th = document.createElement("th");
+    th.textContent = h;
+    trh.appendChild(th);
+  }
+  thead.appendChild(trh);
+  table.appendChild(thead);
+
+  const tbody = document.createElement("tbody");
+  for (let i = 0; i < r.versos.length; i++) {
+    const v = r.versos[i];
+    const letra = r.rima.versos[i]?.letraConsonante;
+    const palabra = r.rima.versos[i]?.palabra ?? "";
+    const consonante = r.rima.versos[i]?.consonante ?? "";
+    const esOk = ok(v.silabasPoeticas, i);
+
+    const tr = document.createElement("tr");
+    if (!esOk) tr.className = "fila-desviada";
+
+    const valores = [
+      String(v.numero),
+      String(v.silabasPoeticas),
+      letra && letra !== "-" ? letra : "·",
+      palabra,
+      esOk ? "✓" : "⚠",
+    ];
+
+    for (let j = 0; j < valores.length; j++) {
+      const td = document.createElement("td");
+      td.textContent = valores[j];
+      if (j === 2 && consonante) td.title = consonante;
+      tr.appendChild(td);
+    }
+
+    tbody.appendChild(tr);
+  }
+  table.appendChild(tbody);
+
+  return table;
+}
+
+function crearSugerencias(r) {
+  const versosConSugerencias = r.versos.filter(
+    (v) => v.sugerenciasMetricas?.opciones?.length > 0
+  );
+  if (versosConSugerencias.length === 0) return null;
+
+  const fragment = document.createDocumentFragment();
+
+  const titulo = document.createElement("div");
+  titulo.className = "titulo-seccion";
+  titulo.textContent = "Sugerencias métricas";
+  fragment.appendChild(titulo);
+
+  for (const v of versosConSugerencias) {
+    const div = document.createElement("div");
+    div.className = "sugerencia";
+
+    const strong = document.createElement("strong");
+    strong.textContent = "Verso " + v.numero + ":";
+    div.appendChild(strong);
+    div.appendChild(document.createTextNode(" " + v.sugerenciasMetricas.explicacion));
+
+    const ul = document.createElement("ul");
+    for (const o of v.sugerenciasMetricas.opciones) {
+      const li = document.createElement("li");
+      const em = document.createElement("em");
+      em.textContent = o.tipo + ":";
+      li.appendChild(em);
+      li.appendChild(document.createTextNode(" " + o.consejo));
+      ul.appendChild(li);
+    }
+    div.appendChild(ul);
+    fragment.appendChild(div);
+  }
+
+  return fragment;
 }
 
 function metroEsperado(forma, total, estructura) {
