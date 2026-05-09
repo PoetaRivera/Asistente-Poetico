@@ -766,6 +766,14 @@ function clasificarEstructura(versos, rima) {
     };
   }
 
+  if (total >= 3 && esElegia(versos, rima)) {
+    return {
+      tipoProbable: "elegia",
+      confianza: 0.85,
+      motivo: `${total} versos endecasilabos en tercetos encadenados (ABA BCB CDC...).`,
+    };
+  }
+
   if (liraAjustada) {
     return {
       tipoProbable: "lira",
@@ -1024,6 +1032,41 @@ function esMadrigal(metros, patronConsonante) {
   // Todos los versos deben rimar (no hay versos sueltos)
   if (patronConsonante.includes("-")) return false;
   return patronConsonante.length >= 6;
+}
+
+function esElegia(versos, rima) {
+  const n = versos.length;
+  if (n < 3) return false;
+
+  // Todos los versos deben ser endecasílabos (10-12 sílabas poéticas)
+  const todosEndecasilabos = versos.every((v) => Math.abs(v.silabasPoeticas - 11) <= 1);
+  if (!todosEndecasilabos) return false;
+
+  // Tercetos encadenados: el patrón de rima debe seguir ABA BCB CDC...
+  const rimas = rima.versos.map((r) => r.consonante);
+  const numTercetos = Math.floor(n / 3);
+
+  for (let t = 0; t < numTercetos; t++) {
+    const i = t * 3;
+    // Versos 1° y 3° del terceto deben rimar entre sí
+    if (rimas[i] && rimas[i + 2] && rimas[i] !== rimas[i + 2]) return false;
+    // El 2° verso encadena con el 1° y 3° del terceto siguiente
+    if (t < numTercetos - 1) {
+      if (rimas[i + 1] && rimas[i + 3] && rimas[i + 1] !== rimas[i + 3]) return false;
+    }
+  }
+
+  // Versos sobrantes (cierre): serventesio final o verso único
+  const resto = n % 3;
+  if (resto === 1) {
+    // Verso final suelto: debe rimar con el 2° del último terceto
+    if (rimas[n - 1] && rimas[numTercetos * 3 - 2] && rimas[n - 1] !== rimas[numTercetos * 3 - 2]) return false;
+  } else if (resto === 2) {
+    // Dos versos finales: deben formar pareado o rimar con la cadena
+    if (rimas[n - 2] && rimas[n - 1] && rimas[n - 2] !== rimas[n - 1]) return false;
+  }
+
+  return true;
 }
 
 function esCopla(patronAsonante) {
