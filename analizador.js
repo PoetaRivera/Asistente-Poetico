@@ -685,6 +685,15 @@ function clasificarEstructura(versos, rima) {
     };
   }
 
+  if (total >= 6 && total % 6 === 0 && esCoplaManriquena(metros, patronConsonante)) {
+    const estrofas = total / 6;
+    return {
+      tipoProbable: "copla manriqueña",
+      confianza: 0.9,
+      motivo: `${total} versos en ${estrofas} copla(s) de pie quebrado (8-8-4-8-8-4, rima ABC ABC).`,
+    };
+  }
+
   if (total === 4 && todosExactos(8) && patronConsonante === "ABAB") {
     return {
       tipoProbable: "cuarteta",
@@ -1064,6 +1073,28 @@ function esElegia(versos, rima) {
   } else if (resto === 2) {
     // Dos versos finales: deben formar pareado o rimar con la cadena
     if (rimas[n - 2] && rimas[n - 1] && rimas[n - 2] !== rimas[n - 1]) return false;
+  }
+
+  return true;
+}
+
+function esCoplaManriquena(metros, patronConsonante) {
+  const n = metros.length;
+  if (n === 0 || n % 6 !== 0) return false;
+
+  // Patrón métrico 8-8-4-8-8-4 repetido
+  const esperado = [8, 8, 4, 8, 8, 4];
+  for (let i = 0; i < n; i++) {
+    if (Math.abs(metros[i] - esperado[i % 6]) > 1) return false;
+  }
+
+  // Rima ABC ABC por cada sexteto
+  for (let g = 0; g < n; g += 6) {
+    const p = patronConsonante.slice(g, g + 6);
+    if (p.length < 6) return false;
+    if (p.includes("-")) return false;
+    if (p[0] !== p[3] || p[1] !== p[4] || p[2] !== p[5]) return false;
+    if (p[0] === p[1] || p[0] === p[2] || p[1] === p[2]) return false;
   }
 
   return true;

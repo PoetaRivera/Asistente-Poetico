@@ -341,9 +341,13 @@ function metroEsperado(forma, total, estructura) {
   // Formas con patrón métrico fijo por posición
   if (forma === 'lira') return [7, 11, 7, 7, 11];
   if (forma === 'seguidilla') return [7, 5, 7, 5];
+  if (forma === 'copla manriqueña') {
+    const patron = [8, 8, 4, 8, 8, 4];
+    return Array.from({ length: total }, (_, i) => patron[i % 6]);
+  }
   // Silva: cualquier verso de 7 u 11 es válido
   if (forma === 'silva') {
-    return Array(total).fill(null).map(() => null); // null = cualquier 7 o 11
+    return Array(total).fill(null).map(() => null);
   }
   // Si la estructura ya tiene metrosAjustados, usarlos
   if (estructura.metrosAjustados) return estructura.metrosAjustados;
