@@ -2,6 +2,7 @@ import { depurarVerso } from './utils.js';
 import { leerVerso, segundo, contarSilabasOrtografico, contarSilabasPoetico } from './metrica.js';
 import { analizarPoema } from './analizador.js';
 
+const MAX_CARACTERES = 10000;
 let tamanoInicialVentana = '25vh';
 let ampliar = true;
 
@@ -13,6 +14,17 @@ let ampliar = true;
  * Restablece la altura de cada textarea al valor inicial (--tamanoVentanaMin)
  * para deshacer el efecto de ampliarVentanas().
  */
+export function actualizarContador() {
+  const intext1 = document.getElementById("intext1");
+  const contador = document.getElementById("contador-caracteres");
+  if (!intext1 || !contador) return;
+  const restantes = MAX_CARACTERES - intext1.value.length;
+  contador.textContent = restantes + " caracteres restantes";
+  contador.classList.remove("cerca-limite", "en-limite");
+  if (restantes <= 0) contador.classList.add("en-limite");
+  else if (restantes <= 500) contador.classList.add("cerca-limite");
+}
+
 export function limpiar() {
   // limpia todos loa textarea
   const boton3 = document.getElementById("boton3");
@@ -127,6 +139,11 @@ export function principal() {
   const outtext4 = document.getElementById("outtext4");
   const boton3 = document.getElementById("boton3");
 
+  if (intext1.value.length > MAX_CARACTERES) {
+    intext1.value = intext1.value.slice(0, MAX_CARACTERES);
+    actualizarContador();
+  }
+
   if (intext1.value.trim() === "") {
     boton3.disabled = true;
   } else {
@@ -186,6 +203,10 @@ export function leerFila() {
 export function analisisCompleto() {
   const intext1 = document.getElementById("intext1");
   if (!intext1.value.trim()) return;
+  if (intext1.value.length > MAX_CARACTERES) {
+    intext1.value = intext1.value.slice(0, MAX_CARACTERES);
+    actualizarContador();
+  }
 
   const r = analizarPoema(intext1.value);
   const cont = document.getElementById("contenido-analisis");

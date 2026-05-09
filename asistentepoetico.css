@@ -193,11 +193,29 @@ body {
   /*Cuerpo*/
   #versoin {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: flex-start;
-    gap: 10px;
+    gap: 4px;
     width: 100%;
     margin-top: 10px;
+  }
+
+  #contador-caracteres {
+    font-size: 0.65rem;
+    color: var(--colorOscuro3);
+    text-align: right;
+    padding-right: 4px;
+    min-height: 1em;
+  }
+
+  #contador-caracteres.cerca-limite {
+    color: #ff9800;
+    font-weight: 600;
+  }
+
+  #contador-caracteres.en-limite {
+    color: #f44336;
+    font-weight: 700;
   }
 
   #ortografico {
